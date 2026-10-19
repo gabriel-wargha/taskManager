@@ -1,0 +1,922 @@
+<title>DateDeck Sprint Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap">
+<style>
+:root {
+  --bg: #e6f3ec;
+  --surface: #ffffff;
+  --surface-2: #f1f5f3;
+  --ink: #23303a;
+  --muted: #56656f;
+  --line: #d4e1da;
+  --coral: #ff6f59;
+  --coral-ink: #c23a26;
+  --lav: #e3dbfa;
+  --ok: #2b7a55;
+  --ok-tint: #d4efe2;
+  --focus: #6a55d8;
+  --shadow: 0 1px 0 rgba(35,48,58,.05), 0 10px 22px -16px rgba(35,48,58,.45);
+  --l-backend: #3f9b6b;
+  --l-frontend: #3f7fd0;
+  --l-design: #8a64d6;
+  --l-qa: #e08a2c;
+  --p1: #ff6f59; --p2: #3f7fd0; --p3: #3f9b6b; --p4: #8a64d6;
+  --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161d21; --surface: #222b31; --surface-2: #2b353c; --ink: #eef3f1; --muted: #a6b3ba;
+    --line: #34414a; --coral: #ff7d69; --coral-ink: #ff9a88; --lav: #3e3763; --ok: #5fd39a; --ok-tint: #22412f;
+    --focus: #b4a6ff; --shadow: 0 1px 0 rgba(0,0,0,.3), 0 10px 22px -16px rgba(0,0,0,.8);
+    --l-backend: #5cc08c; --l-frontend: #6ba3ef; --l-design: #ad8ef0; --l-qa: #f0a556;
+    --p1: #ff7d69; --p2: #6ba3ef; --p3: #5cc08c; --p4: #ad8ef0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161d21; --surface: #222b31; --surface-2: #2b353c; --ink: #eef3f1; --muted: #a6b3ba;
+  --line: #34414a; --coral: #ff7d69; --coral-ink: #ff9a88; --lav: #3e3763; --ok: #5fd39a; --ok-tint: #22412f;
+  --focus: #b4a6ff; --shadow: 0 1px 0 rgba(0,0,0,.3), 0 10px 22px -16px rgba(0,0,0,.8);
+  --l-backend: #5cc08c; --l-frontend: #6ba3ef; --l-design: #ad8ef0; --l-qa: #f0a556;
+  --p1: #ff7d69; --p2: #6ba3ef; --p3: #5cc08c; --p4: #ad8ef0;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 600 15px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; line-height: 1.15; text-wrap: balance; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg { width: 1.15em; height: 1.15em; flex: none; }
+
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: 24px; }
+@media (max-width: 600px) { .wrap { padding-inline: 16px; } }
+
+/* ---------- Header ---------- */
+.top { padding-block: 28px 8px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; }
+.brand { display: flex; align-items: center; gap: 14px; flex: 1 1 420px; min-width: 0; }
+.brand__mark { width: 52px; height: 52px; border-radius: 16px; background: var(--coral); display: grid; place-items: center; transform: rotate(-6deg); flex: none; }
+.brand__mark svg { width: 26px; height: 26px; fill: #fff; }
+.brand h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.5px; }
+.brand p { color: var(--muted); font-size: 15px; margin-top: 2px; }
+.top__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  border-radius: 999px; border: 2px solid transparent; font-family: var(--font-display); font-weight: 600; font-size: 15.5px; white-space: nowrap;
+  transition: background-color .15s, border-color .15s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn--ink { background: var(--ink); color: var(--bg); }
+.btn--ink:hover { opacity: .9; }
+.btn--ghost { background: var(--surface); border-color: var(--line); }
+.btn--ghost:hover { border-color: var(--ink); }
+.btn--sm { min-height: 38px; padding: 0 14px; font-size: 14.5px; }
+.btn[aria-pressed="true"].btn--toggle { background: var(--ok-tint); border-color: var(--ok); color: var(--ok); }
+
+/* ---------- Summary strip ---------- */
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-block: 18px 8px; }
+.stat { background: var(--surface); border-radius: 20px; padding: 14px 18px; }
+.stat b { display: block; font-family: var(--font-display); font-size: 28px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 13.5px; }
+.meter { height: 8px; border-radius: 999px; background: var(--surface-2); margin-top: 8px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--ok); border-radius: 999px; transition: width .3s; }
+@media (max-width: 760px) { .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- Team & schedule ---------- */
+.setup { background: var(--surface); border-radius: 24px; padding: 20px; margin-block: 12px 8px; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); gap: 20px; }
+.setup h2 { font-size: 19px; margin-bottom: 4px; }
+.setup__hint { color: var(--muted); font-size: 13.5px; margin-bottom: 12px; }
+.team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.member { display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 16px; background: var(--surface-2); border-top: 0; position: relative; }
+.member__role { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--pc); flex: none; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field > span { font-size: 12.5px; font-weight: 800; color: var(--muted); }
+.input, .select, .textarea {
+  width: 100%; min-height: 40px; padding: 8px 12px; border: 2px solid transparent; border-radius: 12px; background: var(--surface); font-weight: 700; font-size: 15px;
+}
+.member .input { background: var(--surface); }
+.setup__sched .input, .setup__sched .select { background: var(--surface-2); }
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--ink); }
+.input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.input::placeholder, .textarea::placeholder { color: var(--muted); font-weight: 600; }
+.select { appearance: none; -webkit-appearance: none; padding-right: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2356656f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px 8px; }
+.roles__title { font-size: 16px; margin: 16px 0 8px; }
+.roles { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.roles div { background: var(--surface-2); border-radius: 12px; padding: 8px 12px; }
+.roles dt { font-size: 12.5px; color: var(--muted); font-weight: 800; }
+.roles dd { margin: 0; font-weight: 800; }
+@media (max-width: 700px) { .roles { grid-template-columns: 1fr 1fr; } }
+.setup__sched { display: flex; flex-direction: column; gap: 10px; }
+.sync { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.sync i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.sync.is-live i { background: var(--ok); }
+@media (max-width: 1000px) { .setup { grid-template-columns: 1fr; } .team { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .team { grid-template-columns: 1fr; } }
+
+/* ---------- Sprint nav ---------- */
+.snav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: color-mix(in oklab, var(--bg) 92%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.snav__inner { display: flex; gap: 8px; padding-block: 10px; overflow-x: auto; scrollbar-width: none; }
+.snav a { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 999px; background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 800; font-size: 14px; }
+.snav a small { color: var(--muted); font-weight: 700; }
+.snav a:hover { outline: 2px solid var(--line); }
+
+/* ---------- Sprints ---------- */
+.sprint { margin-block: 18px 34px; scroll-margin-top: 64px; }
+.sprint__head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 20px; margin-bottom: 14px; }
+.sprint__title { flex: 1 1 380px; min-width: 0; }
+.sprint__num { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: var(--muted); }
+.sprint__num b { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: 15px; }
+.sprint h2 { font-size: clamp(22px, 2.6vw, 28px); margin-top: 6px; }
+.sprint__goal { color: var(--muted); margin-top: 4px; max-width: 70ch; }
+.sprint__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.lanes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.lane { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.lane__head { display: flex; align-items: center; gap: 8px; padding: 0 4px; min-height: 28px; }
+.lane__name { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane__pts { margin-left: auto; color: var(--muted); font-size: 13px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 1100px) { .lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .lanes { grid-template-columns: 1fr; } }
+
+.story {
+  position: relative; display: flex; flex-direction: column; gap: 8px; text-align: left; width: 100%;
+  background: var(--surface); border: 0; border-radius: 18px; padding: 12px 14px 12px; box-shadow: var(--shadow);
+  transition: transform .12s, box-shadow .12s;
+}
+.story:hover { transform: translateY(-2px); }
+.story__labels { display: flex; gap: 6px; }
+.lbl { height: 8px; width: 40px; border-radius: 4px; background: var(--lc); }
+.story__top { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pts { margin-left: auto; padding: 1px 9px; border-radius: 999px; background: var(--surface-2); color: var(--ink); }
+.story__title { font-family: var(--font-display); font-weight: 600; font-size: 17px; line-height: 1.2; }
+.story__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 12.5px; color: var(--muted); }
+.in-trello { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px 1px 6px; border-radius: 999px; background: var(--ok-tint); color: var(--ok); font-weight: 800; }
+.in-trello svg { width: 14px; height: 14px; }
+.story.is-added { opacity: .78; }
+
+/* ---------- Demo script ---------- */
+.demo { margin-top: 14px; background: var(--lav); border-radius: 20px; padding: 16px 18px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 10px 20px; }
+.demo__head h3 { font-size: 18px; }
+.demo__head p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.demo__steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; }
+.demo__steps li { padding-left: 4px; }
+.demo__steps li::marker { font-family: var(--font-display); font-weight: 600; }
+.demo__steps li > span:last-child { display: block; font-size: 14.5px; }
+.demo__who { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 13px; }
+.demo__note { grid-column: 2; color: var(--muted); font-size: 13.5px; }
+@media (max-width: 800px) { .demo { grid-template-columns: 1fr; } .demo__note { grid-column: auto; } }
+
+/* ---------- Help ---------- */
+.help { background: var(--surface); border-radius: 24px; padding: 22px; margin-block: 8px 28px; }
+.help h2 { font-size: 21px; margin-bottom: 14px; }
+.ways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.way { background: var(--surface-2); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.way h3 { font-size: 17px; }
+.way p, .way li { color: var(--muted); font-size: 14px; }
+.way ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.auto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: center; background: var(--lav); border-radius: 18px; padding: 18px; margin-bottom: 18px; }
+.auto h3 { font-size: 18px; margin-bottom: 6px; }
+.auto p { font-size: 14.5px; }
+.cmd { margin: 0; background: var(--ink); color: var(--bg); border-radius: 14px; padding: 14px 16px; overflow-x: auto; font: 600 13px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.ways__title { font-size: 16px; margin-bottom: 10px; color: var(--muted); }
+@media (max-width: 900px) { .auto { grid-template-columns: 1fr; } }
+.help__connector { margin-top: 14px; color: var(--muted); font-size: 14px; }
+@media (max-width: 900px) { .ways { grid-template-columns: 1fr; } }
+.foot { color: var(--muted); font-size: 13px; padding-block: 0 32px; text-align: center; }
+
+/* ---------- Card drawer ---------- */
+.drawer {
+  margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(560px, 100vw); max-width: 100vw;
+  padding: 0; border: 0; background: var(--surface); color: var(--ink); box-shadow: -20px 0 60px -20px rgba(10,15,20,.5);
+}
+.drawer[open] { display: flex; flex-direction: column; animation: slide .22s ease-out; }
+@keyframes slide { from { transform: translateX(40px); opacity: 0; } }
+.drawer::backdrop { background: rgba(20,28,32,.45); }
+.drawer__head { display: flex; align-items: center; gap: 8px; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 10px 22px; border-bottom: 1px solid var(--line); }
+.drawer__id { font-weight: 800; color: var(--muted); font-size: 14px; flex: 1; font-variant-numeric: tabular-nums; }
+.icon-btn { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--surface-2); color: var(--ink); }
+.icon-btn:hover { background: var(--line); }
+.icon-btn[disabled] { opacity: .35; cursor: not-allowed; }
+.drawer__body { flex: 1; overflow-y: auto; padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 16px; }
+.drawer .input, .drawer .select, .drawer .textarea { background: var(--surface-2); }
+.title-input { font-family: var(--font-display); font-size: 22px; font-weight: 600; min-height: 48px; }
+.row3 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr) minmax(0, 1fr); gap: 10px; }
+@media (max-width: 480px) { .row3 { grid-template-columns: 1fr 1fr; } .row3 .field:first-child { grid-column: 1 / -1; } }
+.textarea { resize: vertical; line-height: 1.45; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; background: var(--surface-2); font-size: 13px; font-weight: 800; }
+.chip i { width: 10px; height: 10px; border-radius: 3px; background: var(--lc); }
+.export { background: var(--surface-2); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.export h3 { font-size: 16px; }
+.export .textarea { background: var(--surface); font-size: 13.5px; min-height: 180px; }
+.export__btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.drawer__foot { padding: 12px 22px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.drawer__foot .btn--toggle { margin-left: auto; }
+.saved-note { font-size: 12.5px; color: var(--muted); }
+
+/* ---------- Toast ---------- */
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 100; background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 14px; font-weight: 700; box-shadow: 0 12px 28px -12px rgba(0,0,0,.5); max-width: calc(100vw - 32px); }
+.toast[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.3C1.5 8 3.6 4.5 7.1 4.5c2 0 3.6 1.1 4.9 3 1.3-1.9 2.9-3 4.9-3 3.5 0 5.6 3.5 4.4 6.7-1.8 4.7-9.3 9.3-9.3 9.3z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2.2"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="brand__mark"><svg><use href="#i-heart"/></svg></span>
+      <div>
+        <h1>DateDeck sprint plan</h1>
+        <p id="subline">3 sprints, 4 people, 2 stories each per sprint</p>
+      </div>
+    </div>
+    <div class="top__actions">
+      <button class="btn btn--ghost" id="copyAllTitles" type="button"><svg><use href="#i-copy"/></svg>Copy all 24 titles</button>
+      <button class="btn btn--ghost" id="csvAll" type="button"><svg><use href="#i-down"/></svg>CSV</button>
+      <button class="btn btn--ink" id="jsonAll" type="button"><svg><use href="#i-down"/></svg>Download for Trello script</button>
+    </div>
+  </header>
+
+  <section class="summary" aria-label="Plan summary">
+    <div class="stat"><b id="sStories">24</b><span>stories</span></div>
+    <div class="stat"><b id="sPoints">0</b><span>story points in total</span></div>
+    <div class="stat"><b id="sDates">-</b><span id="sDatesLabel">plan dates</span></div>
+    <div class="stat"><b id="sAdded">0 of 24</b><span>cards added to Trello</span><div class="meter" aria-hidden="true"><i id="sMeter" style="width:0%"></i></div></div>
+  </section>
+
+  <section class="setup" aria-labelledby="setupTitle">
+    <div>
+      <h2 id="setupTitle">Team</h2>
+      <p class="setup__hint">Each person owns one track for all three sprints. Add Trello usernames so the script and email cards assign each card to its owner.</p>
+      <div class="team" id="team"></div>
+      <h3 class="roles__title">Team roles</h3>
+      <dl class="roles">
+        <div><dt>Conducting meetings</dt><dd>Riley Cluff</dd></div>
+        <div><dt>Team assignment list</dt><dd>Gabriel Wargha</dd></div>
+        <div><dt>GitHub working</dt><dd>Rychen Jones</dd></div>
+        <div><dt>Documentation</dt><dd>Talmage Trebilcock</dd></div>
+        <div><dt>Presentations</dt><dd>Talmage Trebilcock</dd></div>
+        <div><dt>Submitting assignments</dt><dd>Rychen Jones</dd></div>
+      </dl>
+      <p class="setup__hint" style="margin-top:10px">Talks happen on Discord.</p>
+    </div>
+    <div class="setup__sched">
+      <h2>Schedule</h2>
+      <label class="field"><span>Sprint 1 starts</span><input class="input" id="startDate" type="date"></label>
+      <label class="field"><span>Sprint length</span>
+        <select class="select" id="weeks">
+          <option value="1">1 week</option>
+          <option value="2">2 weeks</option>
+          <option value="3">3 weeks</option>
+        </select>
+      </label>
+      <p class="sync" id="sync"><i></i><span>Connecting…</span></p>
+    </div>
+  </section>
+</div>
+
+<nav class="snav" aria-label="Sprints"><div class="wrap snav__inner" id="snav"></div></nav>
+
+<main class="wrap" id="sprints"></main>
+
+<div class="wrap">
+  <section class="help" aria-labelledby="helpTitle">
+    <h2 id="helpTitle">Getting the cards into Trello</h2>
+    <div class="auto">
+      <div>
+        <h3>Create the whole board automatically</h3>
+        <p>Run <strong>npm start</strong> in the taskManager folder on your computer, enter your Trello key and token, and pick a sprint. It creates each card in its owner’s To do list, with one shared Done list for the team, plus checklists and due dates. Press <strong>Download for Trello script</strong> first to bring your edits from this page. Your key never goes into this page.</p>
+      </div>
+      <pre class="cmd" aria-label="Command to run"><code>cd ~/Desktop/taskManager
+npm start</code></pre>
+    </div>
+    <h3 class="ways__title">Or add cards by hand</h3>
+    <div class="ways">
+      <div class="way">
+        <h3>A whole sprint at once</h3>
+        <ol>
+          <li>Press <strong>Copy titles</strong> on a sprint.</li>
+          <li>In Trello, open <strong>Add a card</strong> on your list and paste.</li>
+          <li>Trello offers to create one card per line. Accept it.</li>
+          <li>Open each card here and copy its description in.</li>
+        </ol>
+      </div>
+      <div class="way">
+        <h3>One card, fully filled in</h3>
+        <ol>
+          <li>Click a story to open it.</li>
+          <li>Press <strong>Copy for email</strong>.</li>
+          <li>Send it to your board's email address (board menu, Email-to-board). The first line is the subject.</li>
+          <li>The subject becomes the title, <strong>#labels</strong> and <strong>@usernames</strong> are applied, and the body becomes the description.</li>
+        </ol>
+      </div>
+      <div class="way">
+        <h3>Everything as a spreadsheet</h3>
+        <p>Download the CSV for all cards or one sprint. It has title, description, labels, members, due date, sprint, week and branch, ready for a spreadsheet or a Trello CSV import tool.</p>
+        <p>Make labels named Backend, Frontend, Design and QA on your board first so the tags match.</p>
+      </div>
+    </div>
+    <p class="help__connector">Want the cards created for you? Run the taskManager app on your computer: it creates each sprint’s cards in each person’s To do list.</p>
+  </section>
+  <p class="foot" id="foot"></p>
+</div>
+
+<dialog class="drawer" id="drawer" aria-labelledby="dTitleLabel">
+  <div class="drawer__head">
+    <span class="drawer__id" id="dId"></span>
+    <button class="icon-btn" id="dPrev" type="button" aria-label="Previous story"><svg><use href="#i-left"/></svg></button>
+    <button class="icon-btn" id="dNext" type="button" aria-label="Next story"><svg><use href="#i-right"/></svg></button>
+    <button class="icon-btn" id="dClose" type="button" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="drawer__body">
+    <label class="field"><span id="dTitleLabel">Card title</span><input class="input title-input" id="dTitle" maxlength="120"></label>
+    <div class="row3">
+      <label class="field"><span>Owner</span><select class="select" id="dOwner"></select></label>
+      <label class="field"><span>Points</span>
+        <select class="select" id="dPoints"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="5">5</option></select>
+      </label>
+      <label class="field"><span>Due</span><input class="input" id="dDue" readonly tabindex="-1"></label>
+    </div>
+    <div class="field"><span>Labels</span><div class="chips" id="dLabels"></div></div>
+    <label class="field"><span>User story</span><textarea class="textarea" id="dStory" rows="3"></textarea></label>
+    <label class="field"><span>Acceptance criteria, one per line</span><textarea class="textarea" id="dCriteria" rows="5"></textarea></label>
+    <p class="saved-note" id="dDeps"></p>
+    <section class="export" aria-labelledby="exportTitle">
+      <h3 id="exportTitle">Trello card description</h3>
+      <textarea class="textarea" id="dPreview" readonly aria-label="Card description to paste into Trello"></textarea>
+      <div class="export__btns">
+        <button class="btn btn--ink btn--sm" id="cpTitle" type="button"><svg><use href="#i-copy"/></svg>Copy title</button>
+        <button class="btn btn--ink btn--sm" id="cpDesc" type="button"><svg><use href="#i-copy"/></svg>Copy description</button>
+        <button class="btn btn--ghost btn--sm" id="cpEmail" type="button"><svg><use href="#i-mail"/></svg>Copy for email</button>
+      </div>
+    </section>
+  </div>
+  <div class="drawer__foot">
+    <span class="saved-note" id="dSaved"></span>
+    <button class="btn btn--ghost btn--sm btn--toggle" id="dAdded" type="button" aria-pressed="false"><svg><use href="#i-check"/></svg><span>Mark as added to Trello</span></button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------------- The plan ----------------
+  const LABELS = {
+    backend: { name: 'Backend', color: 'var(--l-backend)' },
+    frontend: { name: 'Frontend', color: 'var(--l-frontend)' },
+    design: { name: 'Design', color: 'var(--l-design)' },
+    qa: { name: 'QA', color: 'var(--l-qa)' },
+  };
+  const TRACKS = [
+    { role: 'PocketBase and data', color: 'var(--p1)' },
+    { role: 'Deck and swiping', color: 'var(--p2)' },
+    { role: 'Forms, filters and React setup', color: 'var(--p3)' },
+    { role: 'Design, lists and quality', color: 'var(--p4)' },
+  ];
+  const SPRINTS = [
+    { n: 1, name: 'First deck', goal: 'PocketBase with 30 real Rexburg date ideas, a Vite and React app with its look and layout, a deck with Save and Hide, and a form that adds ideas to PocketBase.',
+      note: 'One branch per person per week, named after you and the story (for example rychen/dd-01), merged by Friday. On day 1 Gabriel pushes the empty app first, so everyone can branch from it.',
+      better: 'The starting point: a React app showing real Rexburg date ideas from PocketBase, where you can add your own.',
+      demo: [[0, 'Show the React project in the GitHub repo and how a change goes from branch to pull request, then start the app with npm run dev.'],
+             [3, 'Open the app: the layout and colors, then the 30 Rexburg ideas in the PocketBase dashboard.'],
+             [1, 'Click through the deck with Save and Hide, then reload: your choices are still remembered.'],
+             [2, 'Add an idea with the form and show it appear in the PocketBase dashboard.']] },
+    { n: 2, name: 'Swipe, filter and ship', goal: 'Swipe to save or hide, filter by location and price, see your saved and hidden ideas, open an idea’s details, work well on phones, and put DateDeck online. The core app is done.',
+      better: 'From clicking buttons to a real swipe app, filtered to what you want and live online.',
+      demo: [[0, 'Share the live link so the class opens DateDeck on their phones.'],
+             [1, 'Swipe right to save and left to hide, then undo a swipe and shuffle the deck.'],
+             [2, 'Filter to free ideas near campus, then open one and tap Open in Maps.'],
+             [3, 'Show Saved and Hidden, bring a hidden idea back, and show the phone layout.']] },
+    { n: 3, name: 'Accounts and AI', goal: 'Add sign-in so saved and hidden ideas follow each person, let people edit their own ideas, and add AI that suggests dates and helps write new ideas. Planned now so you can adjust it after sprint 2.',
+      better: 'From one shared app to personal accounts and an AI that helps you choose.',
+      demo: [[0, 'Sign up and sign in on two phones: each person sees only their own saved and hidden ideas.'],
+             [1, 'Ask the AI for “a cheap outdoor date for Friday night” and get 3 DateDeck ideas with reasons, then add an idea and let the AI fill in the details.'],
+             [2, 'Press Pick one for us on the Saved list, then edit one of your own ideas.'],
+             [3, 'Approve a new idea so it goes live, and show the accessibility score.']] },
+  ];
+  // owner = track index (0 Rychen, 1 Riley, 2 Gabriel, 3 Talmage). week = 1 to 6, two weeks per sprint.
+  // Each week every person has one story, so one branch. A story only depends on stories from earlier weeks.
+  const S = (id, sprint, week, owner, points, labels, title, story, criteria, deps = []) => ({ id, sprint, week, owner, points, labels, title, story, criteria, deps });
+  const STORIES = [
+    // Week 1
+    S('DD-01', 1, 1, 0, 3, ['backend'], 'Set up PocketBase and the ideas collection',
+      'As the team, we want a PocketBase database with an ideas collection, so that every part of DateDeck reads and saves the same data.',
+      ['PocketBase lives in a pocketbase folder and runs on its own, without the React app', 'Ideas collection: title, description, place name, address, location area, price per person, duration, category and photo', 'Anyone can list, view and add ideas (we lock this down in sprint 3)', 'The collection is saved as migrations in the repo, so everyone gets the same schema']),
+    S('DD-03', 1, 1, 1, 2, ['frontend'], 'Build the IdeaCard component',
+      'As a user, I want each idea on a card that shows what it is, where, how much and how long, so that I can decide at a glance.',
+      ['IdeaCard React component that takes an idea as props', 'Shows photo (or a placeholder), title, place, location area, price per person (Free when 0) and duration', 'Works from 320px wide up', 'Shown with the ideas in src/data/sample-ideas.json; plain styles for now']),
+    S('DD-05', 1, 1, 2, 2, ['frontend'], 'Set up the Vite and React project on GitHub',
+      'As the team, we want one repo everyone can run in minutes, so that we can all start building on day one.',
+      ['First thing on day 1: push the empty Vite and React app and src/data/sample-ideas.json (5 ideas with the ideas collection fields) to main, so everyone can branch from it', 'README: how to run the app and PocketBase locally', 'Branch and pull request rules; main is protected', 'Lint and format setup so everyone’s code looks the same']),
+    S('DD-07', 1, 1, 3, 2, ['design'], 'Design the look and the app layout',
+      'As the team, we want shared colors, fonts and a layout, so that every screen looks like one app.',
+      ['Design tokens as CSS variables: colors, fonts, spacing, corners', 'App shell with header and Deck and Browse tabs', 'Mobile-first layout that also works on a laptop', 'A one-page style guide in the docs']),
+    // Week 2
+    S('DD-02', 1, 2, 0, 2, ['backend', 'frontend'], 'Connect React to PocketBase',
+      'As a developer, I want one simple way to load and add ideas from React, so that every screen uses the same data code.',
+      ['A shared PocketBase client using the URL from .env', 'A useIdeas hook that lists ideas and adds a new one', 'Loading and error states the screens can show', 'A short example in the README'], ['DD-01']),
+    S('DD-04', 1, 2, 1, 3, ['frontend'], 'Show the deck with Save and Hide buttons',
+      'As a user, I want to see one idea at a time and save or hide it, so that choosing a date is quick.',
+      ['Deck component shows the top idea with two cards stacked behind it, using the sample ideas for now', 'Save and Hide buttons move to the next idea', 'Saved and hidden ideas are remembered in this browser, so they stay after a reload', 'Shows how many ideas are left, and an empty state when you reach the end', 'IdeaCard now uses the design tokens'], ['DD-03', 'DD-07']),
+    S('DD-06', 1, 2, 2, 3, ['frontend'], 'Add an idea with a form',
+      'As a user, I want to add a Rexburg date idea, so that the deck grows with ideas from people who live here.',
+      ['React form: title, place, address, location area, price per person, duration, category and description', 'Clear messages for missing or invalid fields', 'Saves straight to PocketBase, and the new idea shows in the PocketBase dashboard', 'Clears the form and confirms it was added'], ['DD-01', 'DD-05']),
+    S('DD-08', 1, 2, 3, 2, ['qa'], 'Collect 30 Rexburg date ideas and load them',
+      'As a user, I want real Rexburg ideas from the first day, so that the deck is useful right away.',
+      ['30 ideas from real Rexburg-area places, with address and location area', 'Every price range covered: free, under $10, $10 to $25, and $25 and up', 'Every location area and category has at least 3 ideas', 'Loaded into PocketBase with an import file the team can rerun'], ['DD-01']),
+    // Week 3
+    S('DD-09', 2, 3, 0, 2, ['backend'], 'Filter ideas in PocketBase by location and price',
+      'As a user, I want only ideas that match my location and budget, so that the deck shows what works for me.',
+      ['The deck loads the real ideas through useIdeas instead of the sample file', 'useIdeas accepts location areas, a price range, category and search text', 'Filtering is done with PocketBase filter queries, not in the browser', 'Results are sorted and paged so the deck stays fast'], ['DD-02', 'DD-04']),
+    S('DD-11', 2, 3, 1, 3, ['frontend'], 'Swipe the card by dragging',
+      'As a user, I want to swipe right to save and left to hide, so that DateDeck feels like flicking through a deck.',
+      ['Drag past a set distance to save (right) or hide (left); short drags spring back', 'SAVE and HIDE stamps fade in while dragging', 'Works with mouse, touch and pen', 'Left and right arrow keys do the same'], ['DD-04']),
+    S('DD-14', 2, 3, 2, 2, ['frontend'], 'Browse all ideas and open the details',
+      'As a user, I want to browse every idea and open one to see everything, so that I can plan the date.',
+      ['Browse tab shows every idea in a grid, loaded with useIdeas', 'Details view: photo, full description, address, price, duration and category', 'Open in Maps link for the address', 'Save or Hide from the details view'], ['DD-02', 'DD-03']),
+    S('DD-15', 2, 3, 3, 3, ['frontend', 'design'], 'Show my Saved and Hidden lists',
+      'As a user, I want to see the ideas I saved and the ones I hid, so that I can plan from my favorites and undo a hide.',
+      ['Saved list with photo, title, location and price', 'Remove an idea from Saved', 'Hidden list with Bring back, which returns it to the deck', 'Clear empty states that explain swiping'], ['DD-04']),
+    // Week 4
+    S('DD-10', 2, 4, 0, 3, ['backend'], 'Put DateDeck online',
+      'As the team, we want DateDeck live on the internet, so that the class can use it on their phones.',
+      ['PocketBase hosted with a persistent disk, serving the Vite build from pb_public', 'Public rules: anyone can view and add ideas, nobody can edit or delete from the app', 'Admin password is strong and backups are on', 'Deploy steps in the README, and a smoke test on the live link: load, swipe, add'], ['DD-09']),
+    S('DD-12', 2, 4, 1, 2, ['frontend'], 'Undo the last swipe and shuffle the deck',
+      'As a user, I want to take back a swipe or mix up the order, so that a mistake or a boring order is easy to fix.',
+      ['Back button undoes the last save or hide', 'Shuffle reorders the ideas that are left', 'Hidden ideas never come back into the stack after a reload'], ['DD-11']),
+    S('DD-13', 2, 4, 2, 3, ['frontend'], 'Build the location and price filters',
+      'As a user, I want to filter by where and how much, so that I only see dates that fit tonight.',
+      ['Location area chips and price ranges: Free, under $10, $10 to $25, $25 and up', 'Category chips and a search box', 'The deck and the Browse grid update together, and Clear all resets them', 'Each option shows how many ideas match'], ['DD-09', 'DD-14']),
+    S('DD-16', 2, 4, 3, 3, ['design', 'qa'], 'Make it great on phones',
+      'As a user on my phone, I want DateDeck to fit my screen and thumbs, so that we can pick a date anywhere.',
+      ['Full-screen deck with buttons in thumb reach', 'Browse grid and the Saved and Hidden lists fit phone screens', 'No sideways scrolling at 375px; tested on iPhone and Android', 'Basic accessibility check: labels, focus and contrast'], ['DD-07', 'DD-15']),
+    // Week 5
+    S('DD-17', 3, 5, 0, 3, ['backend', 'frontend'], 'Sign up and sign in',
+      'As a user, I want my own DateDeck account, so that my choices follow me to any device.',
+      ['Sign up and sign in with email and password using the PocketBase users collection', 'An auth context in React; signed-in state shows in the header', 'Sign out, and stay signed in after a reload', 'Ideas record who added them; only signed-in users add ideas, and only the creator edits or removes theirs'], ['DD-10']),
+    S('DD-19', 3, 5, 1, 3, ['backend', 'frontend'], 'Ask the AI for a date idea',
+      'As a user, I want to describe what I am in the mood for and get matching ideas, so that choosing is even faster.',
+      ['A box where you type something like “cheap outdoor date for Friday night”', 'A PocketBase hook sends it, with the matching DateDeck ideas, to an AI API; the API key stays on the server', 'Shows 3 ideas from DateDeck with a one-line reason each, and Save buttons', 'Handles slow or failed AI answers with a clear message'], ['DD-09', 'DD-10']),
+    S('DD-20', 3, 5, 2, 2, ['frontend'], 'Pick one for us',
+      'As a couple that cannot decide, we want DateDeck to pick from our saved ideas, so that we stop debating and go.',
+      ['Button on the Saved list picks one at random', 'The pick deals in on a card; Pick another never repeats the last one', 'Let’s do this one shows the details with Open in Maps'], ['DD-14', 'DD-15']),
+    S('DD-24', 3, 5, 3, 2, ['qa'], 'Accessibility and polish pass',
+      'As a user who relies on a keyboard or screen reader, I want every part of DateDeck to work for me, so that everyone can use it.',
+      ['Everything works by keyboard with a visible focus ring', 'Images and icon buttons have labels; text contrast is at least 4.5:1', 'Animations turn off with reduced motion', 'Accessibility score of 90 or more on the main screens'], ['DD-16']),
+    // Week 6
+    S('DD-18', 3, 6, 0, 3, ['backend'], 'Keep saved and hidden ideas in your account',
+      'As a signed-in user, I want my saved and hidden ideas stored in my account, so that they are the same on my phone and laptop.',
+      ['A swipes collection linking user, idea and saved or hidden', 'Rules: each person reads and changes only their own swipes', 'On first sign-in, choices saved in the browser move to the account', 'Rules checked with two test accounts'], ['DD-17']),
+    S('DD-21', 3, 6, 1, 3, ['frontend'], 'Let the AI help write a new idea',
+      'As a user adding an idea, I want help filling in the details, so that new ideas are complete and easy to read.',
+      ['From a title and place, the AI suggests a description, category, price range and duration', 'Suggestions fill the form and stay editable; nothing saves until you press Add', 'Uses the same server-side AI hook as DD-19', 'Works normally when the AI is unavailable'], ['DD-06', 'DD-19']),
+    S('DD-22', 3, 6, 2, 2, ['frontend'], 'Edit and remove my own ideas',
+      'As someone who added an idea, I want to fix or remove it, so that my ideas stay accurate.',
+      ['My ideas list for signed-in users', 'Edit reuses the add form, filled in', 'Remove asks first', 'Only the person who added an idea sees these buttons'], ['DD-06', 'DD-17']),
+    S('DD-23', 3, 6, 3, 2, ['backend', 'qa'], 'Approve new ideas before they go live',
+      'As the team, we want to check new ideas before everyone sees them, so that the deck stays useful and appropriate.',
+      ['New ideas start as pending and only show to the person who added them', 'Admins approve or reject pending ideas in the PocketBase dashboard', 'The person sees whether their idea is pending, approved or rejected', 'Starter ideas are already approved'], ['DD-17']),
+  ];
+  const ORDER = STORIES.map((s) => s.id);
+  const BASE = Object.fromEntries(STORIES.map((s) => [s.id, s]));
+
+  // ---------------- State ----------------
+  const DEFAULT_SETTINGS = {
+    members: [{ name: 'Rychen', trello: '' }, { name: 'Riley', trello: '' }, { name: 'Gabriel', trello: '' }, { name: 'Talmage', trello: '' }],
+    start: '2026-10-05',
+    weeks: 2,
+  };
+  let settings = structuredClone(DEFAULT_SETTINGS);
+  let overrides = {}; // id -> { title, story, criteria, owner, points, added }
+  let db = null;
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function card(id) {
+    const b = BASE[id], o = overrides[id] || {};
+    return {
+      ...b,
+      title: o.title ?? b.title,
+      story: o.story ?? b.story,
+      criteria: Array.isArray(o.criteria) ? o.criteria : b.criteria,
+      owner: Number.isInteger(o.owner) ? o.owner : b.owner,
+      points: Number.isFinite(o.points) ? o.points : b.points,
+      added: !!o.added,
+    };
+  }
+  const member = (i) => settings.members[i] || DEFAULT_SETTINGS.members[i];
+  const memberName = (i) => (member(i).name || '').trim() || `Teammate ${i + 1}`;
+
+  // ---------------- Dates ----------------
+  function parseDate(s) { const [y, m, d] = String(s).split('-').map(Number); return new Date(Date.UTC(y, (m || 1) - 1, d || 1)); }
+  function addDays(d, n) { return new Date(d.getTime() + n * 86400000); }
+  function sprintRange(n) {
+    const start = addDays(parseDate(settings.start), (n - 1) * settings.weeks * 7);
+    let end = addDays(start, settings.weeks * 7 - 1);
+    while ([0, 6].includes(end.getUTCDay()) && end > start) end = addDays(end, -1); // end on a weekday
+    return { start, end };
+  }
+  // Week w (1 to 6) runs Monday to Friday; week 1 starts on the first sprint's start date.
+  function weekRange(w) {
+    const start = addDays(parseDate(settings.start), (w - 1) * 7);
+    return { start, end: addDays(start, 4) };
+  }
+  const branchName = (c) => `${memberName(c.owner).toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${c.id.toLowerCase()}`;
+  const fmt = (d, opts = { month: 'short', day: 'numeric' }) => d.toLocaleDateString('en-US', { ...opts, timeZone: 'UTC' });
+  const iso = (d) => d.toISOString().slice(0, 10);
+
+  // ---------------- Card text for Trello ----------------
+  function description(c) {
+    const r = sprintRange(c.sprint), w = weekRange(c.week);
+    const lines = [
+      '**User story**', c.story, '',
+      '**Acceptance criteria**', ...c.criteria.filter(Boolean).map((x) => `- ${x}`), '',
+      '**Details**',
+      `- Sprint ${c.sprint}: ${SPRINTS[c.sprint - 1].name} (${fmt(r.start)} to ${fmt(r.end)})`,
+      `- Week ${c.week}: ${fmt(w.start)} to ${fmt(w.end)}`,
+      `- Owner: ${memberName(c.owner)} (${TRACKS[c.owner].role})`,
+      `- Branch: ${branchName(c)}`,
+      `- Due: ${fmt(w.end, { weekday: 'short', month: 'short', day: 'numeric' })}`,
+    ];
+    if (c.deps.length) lines.push(`- Depends on: ${c.deps.join(', ')}`);
+    return lines.join('\n');
+  }
+  const fullTitle = (c) => `${c.id} ${c.title}`;
+  function emailText(c) {
+    const tags = c.labels.map((l) => `#${LABELS[l].name}`).concat(`#Sprint${c.sprint}`);
+    const user = (member(c.owner).trello || '').trim().replace(/^@/, '');
+    const subject = [fullTitle(c), ...tags, user ? `@${user}` : ''].filter(Boolean).join(' ');
+    return `${subject}\n\n${description(c)}`;
+  }
+
+  // ---------------- Render ----------------
+  function renderTeam() {
+    const el = $('#team');
+    const focused = document.activeElement && el.contains(document.activeElement) ? document.activeElement.id : null;
+    el.innerHTML = TRACKS.map((t, i) => `
+      <div class="member" style="--pc:${t.color}">
+        <span class="member__role"><i class="dot"></i>${esc(t.role)}</span>
+        <label class="field"><span>Name</span><input class="input" id="m${i}name" data-m="${i}" data-k="name" value="${esc(settings.members[i]?.name ?? '')}" placeholder="Teammate ${i + 1}" maxlength="40"></label>
+        <label class="field"><span>Trello username</span><input class="input" id="m${i}trello" data-m="${i}" data-k="trello" value="${esc(settings.members[i]?.trello ?? '')}" placeholder="optional" maxlength="40" autocapitalize="off" spellcheck="false"></label>
+      </div>`).join('');
+    if (focused) { const f = document.getElementById(focused); if (f) { f.focus(); const v = f.value; f.setSelectionRange?.(v.length, v.length); } }
+  }
+
+  function renderSprints() {
+    $('#snav').innerHTML = SPRINTS.map((s) => {
+      const r = sprintRange(s.n);
+      return `<a href="#sprint-${s.n}">Sprint ${s.n}<small>${fmt(r.start)} to ${fmt(r.end)}</small></a>`;
+    }).join('');
+
+    $('#sprints').innerHTML = SPRINTS.map((s) => {
+      const r = sprintRange(s.n);
+      const ids = ORDER.filter((id) => BASE[id].sprint === s.n);
+      const cards = ids.map(card);
+      const pts = cards.reduce((a, c) => a + c.points, 0);
+      const added = cards.filter((c) => c.added).length;
+      const lanes = TRACKS.map((t, i) => {
+        const mine = cards.filter((c) => c.owner === i);
+        const p = mine.reduce((a, c) => a + c.points, 0);
+        return `<div class="lane" style="--pc:${t.color}">
+          <div class="lane__head"><i class="dot"></i><span class="lane__name">${esc(memberName(i))}</span><span class="lane__pts">${p} pts</span></div>
+          ${mine.map(storyHTML).join('') || '<p class="saved-note">No stories this sprint</p>'}
+        </div>`;
+      }).join('');
+      return `<section class="sprint" id="sprint-${s.n}" aria-labelledby="sh${s.n}">
+        <div class="sprint__head">
+          <div class="sprint__title">
+            <span class="sprint__num"><b>${s.n}</b>${fmt(r.start, { weekday: 'short', month: 'short', day: 'numeric' })} to ${fmt(r.end, { weekday: 'short', month: 'short', day: 'numeric' })}, ${pts} points, ${added} of ${ids.length} in Trello</span>
+            <h2 id="sh${s.n}">${esc(s.name)}</h2>
+            <p class="sprint__goal">${esc(s.goal)}</p>
+          </div>
+          <div class="sprint__actions">
+            <button class="btn btn--ghost btn--sm" type="button" data-titles="${s.n}"><svg><use href="#i-copy"/></svg>Copy titles</button>
+            <button class="btn btn--ghost btn--sm" type="button" data-csv="${s.n}"><svg><use href="#i-down"/></svg>CSV</button>
+          </div>
+        </div>
+        <div class="lanes">${lanes}</div>
+        <div class="demo">
+          <div class="demo__head">
+            <h3>What we’ll demo</h3>
+            <p>${esc(s.better)}</p>
+          </div>
+          <ol class="demo__steps">${s.demo.map(([who, text]) => `<li style="--pc:${TRACKS[who].color}"><span class="demo__who"><i class="dot"></i>${esc(memberName(who))}</span><span>${esc(text)}</span></li>`).join('')}</ol>
+          ${s.note ? `<p class="demo__note">${esc(s.note)}</p>` : ''}
+        </div>
+      </section>`;
+    }).join('');
+  }
+
+  function storyHTML(c) {
+    return `<button class="story ${c.added ? 'is-added' : ''}" type="button" data-open="${c.id}" aria-label="${esc(c.id)} ${esc(c.title)}, ${c.points} points${c.added ? ', added to Trello' : ''}">
+      <span class="story__labels" aria-hidden="true">${c.labels.map((l) => `<i class="lbl" style="--lc:${LABELS[l].color}"></i>`).join('')}</span>
+      <span class="story__top">${esc(c.id)} · Week ${c.week}<span class="pts">${c.points} pt${c.points === 1 ? '' : 's'}</span></span>
+      <span class="story__title">${esc(c.title)}</span>
+      <span class="story__meta">${c.labels.map((l) => esc(LABELS[l].name)).join(', ')}${c.deps.length ? `<span>after ${esc(c.deps.join(', '))}</span>` : ''}${c.added ? `<span class="in-trello"><svg><use href="#i-check"/></svg>In Trello</span>` : ''}</span>
+    </button>`;
+  }
+
+  function renderSummary() {
+    const cards = ORDER.map(card);
+    const pts = cards.reduce((a, c) => a + c.points, 0);
+    const added = cards.filter((c) => c.added).length;
+    const first = sprintRange(1).start, last = sprintRange(3).end;
+    $('#sPoints').textContent = pts;
+    $('#sDates').textContent = `${fmt(first)} to ${fmt(last)}`;
+    $('#sDatesLabel').textContent = `${settings.weeks}-week sprints`;
+    $('#sAdded').textContent = `${added} of ${cards.length}`;
+    $('#sMeter').style.width = `${(added / cards.length) * 100}%`;
+    $('#subline').textContent = `Rexburg date ideas you swipe through. Built with Vite, React and PocketBase. The core app ships in sprints 1 and 2; sprint 3 adds accounts and AI. ${fmt(first)} to ${fmt(last, { month: 'short', day: 'numeric', year: 'numeric' })}.`;
+    if (document.activeElement !== $('#startDate')) $('#startDate').value = settings.start;
+    $('#weeks').value = String(settings.weeks);
+  }
+
+  function renderAll() {
+    renderTeam();
+    renderSprints();
+    renderSummary();
+    if ($('#drawer').open) fillDrawer(true);
+  }
+
+  // ---------------- Drawer ----------------
+  const drawer = $('#drawer');
+  let openId = null;
+
+  function fillDrawer(fromSnapshot = false) {
+    const c = card(openId);
+    const r = sprintRange(c.sprint);
+    const busy = fromSnapshot && drawer.contains(document.activeElement) && /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    $('#dId').textContent = `${c.id}, Sprint ${c.sprint}, week ${c.week}`;
+    if (!busy) {
+      $('#dTitle').value = c.title;
+      $('#dOwner').innerHTML = TRACKS.map((t, i) => `<option value="${i}">${esc(memberName(i))}</option>`).join('');
+      $('#dOwner').value = String(c.owner);
+      $('#dPoints').value = String(c.points);
+      $('#dStory').value = c.story;
+      $('#dCriteria').value = c.criteria.join('\n');
+    }
+    $('#dDue').value = fmt(weekRange(c.week).end, { weekday: 'short', month: 'short', day: 'numeric' });
+    $('#dLabels').innerHTML = c.labels.map((l) => `<span class="chip" style="--lc:${LABELS[l].color}"><i></i>${esc(LABELS[l].name)}</span>`).join('') + `<span class="chip" style="--lc:var(--ink)"><i></i>Sprint${c.sprint}</span>`;
+    $('#dDeps').textContent = c.deps.length ? `Start after ${c.deps.map((d) => `${d} ${card(d).title}`).join('; ')}.` : 'No dependencies. Can start on day one of the week.';
+    $('#dPreview').value = description(c);
+    const added = $('#dAdded');
+    added.setAttribute('aria-pressed', String(c.added));
+    added.querySelector('span').textContent = c.added ? 'Added to Trello' : 'Mark as added to Trello';
+    const idx = ORDER.indexOf(openId);
+    $('#dPrev').disabled = idx === 0;
+    $('#dNext').disabled = idx === ORDER.length - 1;
+  }
+  function openDrawer(id) {
+    openId = id;
+    $('#dSaved').textContent = db ? 'Edits save for the whole team' : 'Edits last until you reload';
+    fillDrawer();
+    if (!drawer.open) drawer.showModal();
+  }
+  $('#sprints').addEventListener('click', (e) => {
+    const o = e.target.closest('[data-open]');
+    if (o) return openDrawer(o.dataset.open);
+    const t = e.target.closest('[data-titles]');
+    if (t) {
+      const n = +t.dataset.titles;
+      const text = ORDER.filter((id) => BASE[id].sprint === n).map((id) => fullTitle(card(id))).join('\n');
+      return copy(text, `Copied 8 titles for Sprint ${n}. Paste them into Add a card in Trello.`);
+    }
+    const c = e.target.closest('[data-csv]');
+    if (c) return downloadCSV(ORDER.filter((id) => BASE[id].sprint === +c.dataset.csv), `datedeck-sprint-${c.dataset.csv}-cards.csv`);
+  });
+  $('#dClose').addEventListener('click', () => drawer.close());
+  drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close(); });
+  $('#dPrev').addEventListener('click', () => { const i = ORDER.indexOf(openId); if (i > 0) { commitDrawer(); openId = ORDER[i - 1]; fillDrawer(); } });
+  $('#dNext').addEventListener('click', () => { const i = ORDER.indexOf(openId); if (i < ORDER.length - 1) { commitDrawer(); openId = ORDER[i + 1]; fillDrawer(); } });
+  drawer.addEventListener('close', () => commitDrawer());
+
+  // Edits: update the preview live, save on change (blur) or when leaving the card.
+  function readDrawer() {
+    return {
+      title: $('#dTitle').value.trim() || BASE[openId].title,
+      owner: +$('#dOwner').value,
+      points: +$('#dPoints').value,
+      story: $('#dStory').value.trim(),
+      criteria: $('#dCriteria').value.split('\n').map((x) => x.trim()).filter(Boolean),
+    };
+  }
+  for (const id of ['dTitle', 'dStory', 'dCriteria']) {
+    $('#' + id).addEventListener('input', () => {
+      const c = { ...card(openId), ...readDrawer() };
+      $('#dPreview').value = description(c);
+    });
+    $('#' + id).addEventListener('change', commitDrawer);
+  }
+  for (const id of ['dOwner', 'dPoints']) $('#' + id).addEventListener('change', commitDrawer);
+
+  function commitDrawer() {
+    if (!openId) return;
+    const next = readDrawer();
+    const cur = card(openId);
+    const changed = ['title', 'owner', 'points', 'story'].some((k) => next[k] !== cur[k]) || next.criteria.join('\n') !== cur.criteria.join('\n');
+    if (!changed) return;
+    saveCard(openId, next);
+  }
+
+  $('#dAdded').addEventListener('click', () => {
+    const c = card(openId);
+    saveCard(openId, { added: !c.added });
+    toast(!c.added ? `${c.id} marked as added to Trello` : `${c.id} marked as not in Trello yet`);
+  });
+  $('#cpTitle').addEventListener('click', () => copy(fullTitle(card(openId)), 'Title copied'));
+  $('#cpDesc').addEventListener('click', () => copy($('#dPreview').value, 'Description copied. Paste it into the card’s description in Trello.', $('#dPreview')));
+  $('#cpEmail').addEventListener('click', () => copy(emailText(card(openId)), 'Copied. The first line is the email subject, the rest is the body.'));
+
+  // ---------------- Saving ----------------
+  const writing = {};
+  async function saveCard(id, patch) {
+    overrides[id] = { ...(overrides[id] || {}), ...patch };
+    renderSprints(); renderSummary();
+    if ($('#drawer').open && openId === id) fillDrawer(true);
+    if (!db) return;
+    // one write at a time per document; the latest state wins
+    const run = (writing[id] || Promise.resolve()).then(() => db.doc(`cards/${id}`).set({ ...overrides[id] }));
+    writing[id] = run.catch(() => {});
+    try { await run; } catch (e) { writeFailed(e); }
+  }
+  let settingsWrite = Promise.resolve();
+  function saveSettings() {
+    renderSprints(); renderSummary();
+    if (!db) return;
+    const body = structuredClone(settings);
+    const run = settingsWrite.then(() => db.doc('plan/settings').set(body));
+    settingsWrite = run.catch(() => {});
+    run.catch(writeFailed);
+  }
+  function writeFailed(e) {
+    if (e && e.code === 'invalid_argument') {
+      toast('You can view this plan but not change it. Ask the owner for Contributor access.');
+    } else if (e && e.code === 'quota_exceeded') {
+      toast('The plan’s storage is full. Changes were not saved.');
+    } else {
+      toast('That change did not save. Try again in a moment.');
+    }
+  }
+
+  $('#team').addEventListener('input', (e) => {
+    const i = e.target.dataset.m, k = e.target.dataset.k;
+    if (i == null) return;
+    settings.members[+i] = { ...settings.members[+i], [k]: e.target.value };
+    renderSprints();
+  });
+  $('#team').addEventListener('change', (e) => { if (e.target.dataset.m != null) saveSettings(); });
+  $('#startDate').addEventListener('change', (e) => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) { settings.start = e.target.value; saveSettings(); } });
+  $('#weeks').addEventListener('change', (e) => { settings.weeks = +e.target.value; saveSettings(); });
+
+  // ---------------- Copy, CSV, toast ----------------
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 3600);
+  }
+  async function copy(text, okMsg, selectEl) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(okMsg);
+    } catch {
+      // Fallback: put the text where it can be selected and copied by hand.
+      const el = selectEl || $('#dPreview');
+      if (!drawer.open && !selectEl) {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        let ok = false; try { ok = document.execCommand('copy'); } catch {}
+        ta.remove();
+        toast(ok ? okMsg : 'Copying is blocked here. Download the CSV instead.');
+        return;
+      }
+      if (el !== selectEl) el.value = text;
+      el.focus(); el.select();
+      toast('Copying is blocked here. The text is selected: press Ctrl+C or Cmd+C.');
+    }
+  }
+  function csvCell(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }
+  async function downloadCSV(ids, filename) {
+    const head = ['Card ID', 'Title', 'Description', 'Labels', 'Members', 'Due Date', 'Sprint', 'Week', 'Branch', 'Depends On', 'Owner Track'];
+    const rows = ids.map(card).map((c) => [
+      c.id, fullTitle(c), description(c), [...c.labels.map((l) => LABELS[l].name), `Sprint${c.sprint}`].join(', '),
+      (member(c.owner).trello || '').trim().replace(/^@/, '') || memberName(c.owner), iso(weekRange(c.week).end),
+      `Sprint ${c.sprint}`, `Week ${c.week}`, branchName(c), c.deps.join(', '), TRACKS[c.owner].role,
+    ]);
+    const csv = [head, ...rows].map((r) => r.map(csvCell).join(',')).join('\r\n');
+    const downloads = await (window.claude?.use ? window.claude.use('downloads') : null);
+    if (!downloads) return copy(csv, `Downloads are not available here, so the CSV for ${ids.length} cards was copied instead.`);
+    try {
+      await downloads.save({ filename, data: '﻿' + csv });
+      toast(`Saved ${filename}`);
+    } catch (e) {
+      if (e?.code === 'declined') return;
+      if (e?.code === 'rate_limited') return toast('A download is already waiting for your answer.');
+      copy(csv, `The download did not start, so the CSV was copied instead.`);
+    }
+  }
+  $('#csvAll').addEventListener('click', () => downloadCSV(ORDER, 'datedeck-all-cards.csv'));
+
+  // Everything the Trello script needs, including the team's edits.
+  const TRELLO_COLORS = { backend: 'green', frontend: 'blue', design: 'purple', qa: 'orange' };
+  function exportData() {
+    return {
+      format: 'datedeck-trello-plan',
+      version: 1,
+      board: 'DateDeck',
+      exportedAt: new Date().toISOString(),
+      labels: Object.entries(LABELS).map(([k, l]) => ({ name: l.name, color: TRELLO_COLORS[k] })),
+      members: TRACKS.map((t, i) => ({ name: memberName(i), trello: (member(i).trello || '').trim().replace(/^@/, ''), role: t.role })),
+      sprints: SPRINTS.map((s) => {
+        const r = sprintRange(s.n);
+        return { n: s.n, name: s.name, goal: s.goal, list: `Sprint ${s.n}: ${s.name}`, start: iso(r.start), end: iso(r.end) };
+      }),
+      cards: ORDER.map(card).map((c) => {
+        const w = weekRange(c.week);
+        return {
+          id: c.id, title: fullTitle(c), story: c.story, criteria: c.criteria.filter(Boolean),
+          labels: c.labels.map((l) => LABELS[l].name), sprint: c.sprint, week: c.week, weekStart: iso(w.start), branch: branchName(c), due: iso(w.end),
+          owner: { name: memberName(c.owner), trello: (member(c.owner).trello || '').trim().replace(/^@/, ''), role: TRACKS[c.owner].role },
+          points: c.points, deps: c.deps,
+        };
+      }),
+    };
+  }
+  $('#jsonAll').addEventListener('click', async () => {
+    const json = JSON.stringify(exportData(), null, 2);
+    const downloads = await (window.claude?.use ? window.claude.use('downloads') : null);
+    if (!downloads) return copy(json, 'Downloads are not available here, so the plan was copied. Save it as datedeck-trello.json.');
+    try {
+      await downloads.save({ filename: 'datedeck-trello.json', data: json });
+      toast('Saved datedeck-trello.json. Run the script with it.');
+    } catch (e) {
+      if (e?.code === 'declined') return;
+      if (e?.code === 'rate_limited') return toast('A download is already waiting for your answer.');
+      copy(json, 'The download did not start, so the plan was copied. Save it as datedeck-trello.json.');
+    }
+  });
+  window.datedeckPlanExport = exportData;
+  $('#copyAllTitles').addEventListener('click', () => copy(ORDER.map((id) => fullTitle(card(id))).join('\n'), 'Copied all 24 titles. Paste them into Add a card in Trello.'));
+
+  // ---------------- Shared data ----------------
+  function setSync(live, text) {
+    const el = $('#sync');
+    el.classList.toggle('is-live', live);
+    el.querySelector('span').textContent = text;
+  }
+  async function connect() {
+    db = await (window.claude?.use ? window.claude.use('db') : null);
+    if (!db) {
+      setSync(false, 'Edits stay on this page until you reload');
+      $('#foot').textContent = 'Shared saving is not available in this view, so changes here are not saved for the team.';
+      return;
+    }
+    setSync(true, 'Shared with your team, saved automatically');
+    $('#foot').textContent = '';
+    db.doc('plan/settings').onSnapshot((snap) => {
+      if (!snap.exists) return;
+      const d = snap.data();
+      settings = {
+        members: [0, 1, 2, 3].map((i) => ({ name: d.members?.[i]?.name ?? DEFAULT_SETTINGS.members[i].name, trello: d.members?.[i]?.trello ?? '' })),
+        start: /^\d{4}-\d{2}-\d{2}$/.test(d.start) ? d.start : DEFAULT_SETTINGS.start,
+        weeks: [1, 2, 3].includes(d.weeks) ? d.weeks : DEFAULT_SETTINGS.weeks,
+      };
+      renderAll();
+    }, () => setSync(false, 'Lost the connection to shared data'));
+    db.collection('cards').onSnapshot((snap) => {
+      const next = {};
+      for (const doc of snap.docs) if (BASE[doc.id]) next[doc.id] = { ...doc.data() };
+      overrides = next;
+      renderSprints(); renderSummary();
+      if (drawer.open) fillDrawer(true);
+    }, () => setSync(false, 'Lost the connection to shared data'));
+  }
+
+  renderAll();
+  connect();
+})();
+</script>

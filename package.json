@@ -1,0 +1,12 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "Creates the datedeck sprint plan in Trello, with each card assigned to its owner.",
+  "scripts": {
+    "start": "node trello-app.js",
+    "cli": "node create-trello-board.js",
+    "preview": "node create-trello-board.js datedeck-trello.json --dry-run"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

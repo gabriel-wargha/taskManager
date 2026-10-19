@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DateDeck Trello card creator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap">
+<style>
+:root {
+  --bg: #e6f3ec; --surface: #ffffff; --surface-2: #f1f5f3; --ink: #23303a; --muted: #56656f; --line: #d4e1da;
+  --coral: #ff6f59; --lav: #e3dbfa; --ok: #2b7a55; --ok-tint: #d4efe2; --bad: #c23a26; --bad-tint: #fde3de; --warn: #8a5a00; --warn-tint: #fff0c2;
+  --focus: #6a55d8; --p1: #ff6f59; --p2: #3f7fd0; --p3: #3f9b6b; --p4: #8a64d6;
+  --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif; --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161d21; --surface: #222b31; --surface-2: #2b353c; --ink: #eef3f1; --muted: #a6b3ba; --line: #34414a;
+    --coral: #ff7d69; --lav: #3e3763; --ok: #5fd39a; --ok-tint: #22412f; --bad: #ff8a78; --bad-tint: #4a2620; --warn: #f0c35a; --warn-tint: #463a1c;
+    --focus: #b4a6ff; --p1: #ff7d69; --p2: #6ba3ef; --p3: #5cc08c; --p4: #ad8ef0;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 600 15.5px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; line-height: 1.15; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 860px; margin: 0 auto; padding: 28px 20px 48px; display: flex; flex-direction: column; gap: 18px; }
+@media (max-width: 520px) { .wrap { padding-inline: 16px; } }
+
+header { display: flex; align-items: center; gap: 14px; }
+.mark { width: 48px; height: 48px; border-radius: 15px; background: var(--coral); display: grid; place-items: center; transform: rotate(-6deg); flex: none; }
+.mark svg { width: 24px; height: 24px; fill: #fff; }
+header h1 { font-size: 30px; }
+header p { color: var(--muted); }
+
+.plan { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; background: var(--lav); border-radius: 18px; padding: 12px 16px; }
+.plan b { font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+.plan span { color: var(--muted); }
+.plan label { margin-left: auto; }
+
+.step { background: var(--surface); border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.step__head { display: flex; align-items: center; gap: 12px; }
+.num { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--ink); color: var(--bg); font-family: var(--font-display); font-size: 17px; flex: none; }
+.step.is-done .num { background: var(--ok); }
+.step h2 { font-size: 21px; }
+.step__note { color: var(--muted); font-size: 14.5px; }
+.step.is-locked { opacity: .55; }
+.step.is-locked .step__body { pointer-events: none; }
+.step__body { display: flex; flex-direction: column; gap: 14px; }
+
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field > span { font-size: 13px; font-weight: 800; color: var(--muted); }
+.input, .select { width: 100%; min-height: 44px; padding: 9px 13px; border: 2px solid transparent; border-radius: 12px; background: var(--surface-2); font-weight: 700; }
+.input:focus, .select:focus { outline: none; border-color: var(--ink); }
+.input:focus-visible, .select:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.input::placeholder { color: var(--muted); font-weight: 600; }
+.select { appearance: none; -webkit-appearance: none; padding-right: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2356656f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px 8px; }
+.secret { position: relative; }
+.secret .input { padding-right: 70px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; }
+.secret button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); height: 32px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--surface); font-size: 13px; font-weight: 800; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 20px; border-radius: 999px; border: 2px solid transparent; font-family: var(--font-display); font-weight: 600; font-size: 16px; white-space: nowrap; }
+.btn--ink { background: var(--ink); color: var(--bg); }
+.btn--coral { background: var(--coral); color: #fff; min-height: 54px; font-size: 18px; padding: 0 28px; }
+.btn--ghost { background: transparent; border-color: var(--line); }
+.btn--ghost:hover { border-color: var(--ink); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+details { background: var(--surface-2); border-radius: 14px; padding: 10px 14px; }
+summary { cursor: pointer; font-weight: 800; }
+details ol { margin: 8px 0 2px; padding-left: 20px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+
+.msg { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px; font-weight: 700; }
+.msg--ok { background: var(--ok-tint); color: var(--ok); }
+.msg--bad { background: var(--bad-tint); color: var(--bad); }
+.msg--warn { background: var(--warn-tint); color: var(--warn); }
+
+.team { display: flex; flex-direction: column; gap: 10px; }
+.person { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 10px; align-items: end; padding: 12px; border-radius: 16px; background: var(--surface-2); }
+.person .input { background: var(--surface); }
+.person__role { display: flex; flex-direction: column; gap: 2px; align-self: center; min-width: 0; }
+.person__role b { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.person__role small { color: var(--muted); font-size: 13px; }
+.dot { width: 11px; height: 11px; border-radius: 50%; background: var(--pc); flex: none; }
+.status { grid-column: 2 / -1; font-size: 13px; font-weight: 800; min-height: 18px; }
+.status.ok { color: var(--ok); } .status.bad { color: var(--bad); } .status.wait { color: var(--muted); }
+@media (max-width: 640px) { .person { grid-template-columns: 1fr; } .status { grid-column: auto; } }
+
+.sprints { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.sprints label { position: relative; }
+.sprints input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.sprints span { display: flex; flex-direction: column; gap: 2px; height: 100%; padding: 10px 12px; border-radius: 14px; background: var(--surface-2); border: 2px solid transparent; }
+.sprints b { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+.sprints small { color: var(--muted); font-size: 12.5px; }
+.sprints em { font-style: normal; font-size: 11.5px; font-weight: 800; color: var(--ok); }
+.sprints input:checked + span { border-color: var(--ink); background: var(--surface); }
+.sprints input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 640px) { .sprints { grid-template-columns: 1fr 1fr; } }
+.choice { display: flex; flex-direction: column; gap: 10px; }
+.radio { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+.radio input, .check input { width: 20px; height: 20px; accent-color: var(--ink); }
+.check { display: flex; align-items: center; gap: 10px; }
+.sub { padding-left: 30px; }
+
+.cardlist { margin-top: 12px; display: grid; gap: 12px; }
+.cardlist h3 { font-size: 15px; color: var(--muted); }
+.cardlist ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
+.cardlist li { display: flex; flex-wrap: wrap; gap: 2px 12px; align-items: baseline; background: var(--surface-2); border-radius: 12px; padding: 8px 12px; }
+.cardlist li b { flex: none; min-width: 64px; font-family: var(--font-display); font-weight: 600; }
+.cardlist li span { flex: 1 1 220px; min-width: 0; }
+.cardlist li small { flex: none; color: var(--muted); font-size: 13px; }
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.summary div { background: var(--surface-2); border-radius: 14px; padding: 10px 12px; }
+.summary b { display: block; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
+.summary span { color: var(--muted); font-size: 13px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 640px) { .summary { grid-template-columns: 1fr 1fr; } }
+
+.progress { height: 12px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 999px; transition: width .25s; }
+.log { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.log li { display: flex; gap: 8px; padding: 6px 10px; border-radius: 10px; background: var(--surface-2); }
+.log li small { margin-left: auto; color: var(--muted); white-space: nowrap; }
+.log li.warn { background: var(--warn-tint); color: var(--warn); }
+.log li.error { background: var(--bad-tint); color: var(--bad); }
+.log li.card::before { content: '+'; font-weight: 800; color: var(--ok); }
+.log li.skip::before { content: '='; font-weight: 800; color: var(--muted); }
+.foot { color: var(--muted); font-size: 13px; text-align: center; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.3C1.5 8 3.6 4.5 7.1 4.5c2 0 3.6 1.1 4.9 3 1.3-1.9 2.9-3 4.9-3 3.5 0 5.6 3.5 4.4 6.7-1.8 4.7-9.3 9.3-9.3 9.3z"/></svg></span>
+    <div>
+      <h1>Trello card creator</h1>
+      <p>Creates every DateDeck story in Trello, assigned to the person who owns it.</p>
+    </div>
+  </header>
+
+  <div class="plan" aria-live="polite">
+    <b id="planName">Loading the plan…</b><span id="planMeta"></span>
+    <label class="btn btn--ghost" for="planFile" style="min-height:38px;font-size:14.5px">Use a different plan file</label>
+    <input id="planFile" type="file" accept=".json,application/json" hidden>
+  </div>
+
+  <!-- 1. Connect -->
+  <section class="step" id="step1" aria-labelledby="s1">
+    <div class="step__head"><span class="num">1</span><h2 id="s1">Connect to Trello</h2></div>
+    <div class="step__body">
+      <p class="step__note">Uses the Trello key and token in the <code>.env</code> file in this folder. They stay on this computer and are sent only to Trello.</p>
+      <div class="actions">
+        <button class="btn btn--ghost" id="connect" type="button">Reconnect</button>
+        <div class="msg" id="connectMsg" role="status" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Team -->
+  <section class="step is-locked" id="step2" aria-labelledby="s2">
+    <div class="step__head"><span class="num">2</span><h2 id="s2">Your team</h2></div>
+    <div class="step__body">
+      <p class="step__note">Enter each person's Trello username. It's in their profile link, trello.com/u/<strong>username</strong>. Their cards will be assigned to them and they'll be added to the board.</p>
+      <div class="team" id="team"></div>
+      <div class="actions"><button class="btn btn--ghost" id="checkAll" type="button">Check usernames</button></div>
+    </div>
+  </section>
+
+  <!-- 3. Board -->
+  <section class="step is-locked" id="step3" aria-labelledby="s3">
+    <div class="step__head"><span class="num">3</span><h2 id="s3">Sprint and board</h2></div>
+    <div class="step__body">
+      <div class="field"><span id="sprintLabel">Which sprint's cards?</span><div class="sprints" id="sprints" role="radiogroup" aria-labelledby="sprintLabel"></div></div>
+      <div class="cardlist" id="cardList" aria-live="polite"></div>
+      <div class="choice" role="radiogroup" aria-label="Board">
+        <label class="radio"><input type="radio" name="boardMode" value="new" checked> Create a new board</label>
+        <div class="row sub" id="newBoard">
+          <label class="field"><span>Board name</span><input class="input" id="boardName" maxlength="100"></label>
+          <label class="field"><span>Workspace</span><select class="select" id="workspace"></select></label>
+        </div>
+        <label class="radio"><input type="radio" name="boardMode" value="existing"> Add to a board I already have</label>
+        <div class="sub" id="existingBoard" hidden>
+          <label class="field"><span>Board</span><select class="select" id="boardId"></select></label>
+        </div>
+      </div>
+      <div class="field">
+        <span>Put the cards in</span>
+        <select class="select" id="placement"></select>
+      </div>
+      <p class="msg msg--ok" id="listNote" hidden></p>
+      <label class="check"><input type="checkbox" id="checklists" checked> Add acceptance criteria as a checklist on each card</label>
+      <label class="check"><input type="checkbox" id="dueDates" checked> Set each card's due date to the end of its sprint</label>
+    </div>
+  </section>
+
+  <!-- 4. Create -->
+  <section class="step is-locked" id="step4" aria-labelledby="s4">
+    <div class="step__head"><span class="num">4</span><h2 id="s4">Create the cards</h2></div>
+    <div class="step__body">
+      <div class="summary" id="summary"></div>
+      <div class="msg msg--warn" id="unassigned" hidden></div>
+      <div class="actions"><button class="btn btn--coral" id="create" type="button">Create cards</button></div>
+      <div id="run" hidden>
+        <p id="runText" aria-live="polite" style="margin-bottom:8px"></p>
+        <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+        <ul class="log" id="log" style="margin-top:12px"></ul>
+        <div class="actions" style="margin-top:12px"><a class="btn btn--ink" id="openBoard" href="#" target="_blank" rel="noopener" hidden>Open the board in Trello</a></div>
+      </div>
+      <div class="msg msg--warn" id="undo" hidden style="flex-wrap:wrap;justify-content:space-between">
+        <span id="undoText"></span>
+        <button class="btn btn--ghost" id="undoBtn" type="button" style="min-height:38px;font-size:14.5px"></button>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">Running a second time on the same board skips cards that are already there. Deleting only removes the cards from the last run, never older ones. Close this tab and press Ctrl+C in the terminal when you're done.</p>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const COLORS = ['var(--p1)', 'var(--p2)', 'var(--p3)', 'var(--p4)'];
+
+  let plan = null;
+  let team = [];          // [{role, name, trello, check: null | {found, fullName, username}}]
+  let conn = null;        // {me, boards, workspaces}
+  let sprint = null;      // chosen sprint number, or 'all'
+  const sprintCards = () => plan.cards.filter((c) => sprint === 'all' || c.sprint === sprint);
+
+  async function post(path, body) {
+    const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Request failed (${res.status}).`);
+    return data;
+  }
+  function msg(el, kind, text) { el.className = `msg msg--${kind}`; el.textContent = text; el.hidden = !text; }
+
+  // ---------- Plan ----------
+  function usePlan(p, file) {
+    plan = p;
+    team = p.members.map((m) => ({ role: m.role, name: m.name, trello: m.trello || '', check: null }));
+    const first = p.sprints[0], last = p.sprints[p.sprints.length - 1];
+    $('#planName').textContent = p.board || 'DateDeck';
+    $('#planMeta').textContent = `${p.cards.length} cards in ${p.sprints.length} sprints, ${first.start} to ${last.end}, from ${file}`;
+    if (!$('#boardName').value) $('#boardName').value = p.board || 'DateDeck';
+    // Default to the sprint that's running today, else the first one.
+    const today = new Date().toISOString().slice(0, 10);
+    const now = p.sprints.find((s) => s.start <= today && today <= s.end) || p.sprints.find((s) => today < s.start) || p.sprints[0];
+    sprint = now.n;
+    renderSprints(); renderTeam(); renderPlacement(); renderSummary();
+  }
+  fetch('/plan').then((r) => r.json()).then((d) => usePlan(d.plan, d.file)).catch(() => { $('#planName').textContent = 'Could not load the plan. Restart the app.'; });
+  $('#planFile').addEventListener('change', async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const d = await post('/plan', { plan: JSON.parse(await f.text()), name: f.name });
+      usePlan(d.plan, d.file);
+    } catch (err) { $('#planMeta').textContent = err.message.includes('JSON') ? `${f.name} isn't a valid plan file.` : err.message; }
+    e.target.value = '';
+  });
+
+  function renderSprints() {
+    const today = new Date().toISOString().slice(0, 10);
+    const opts = plan.sprints.map((s) => {
+      const n = plan.cards.filter((c) => c.sprint === s.n).length;
+      const current = s.start <= today && today <= s.end;
+      return `<label><input type="radio" name="sprint" value="${s.n}" ${sprint === s.n ? 'checked' : ''}><span><b>Sprint ${s.n}</b><small>${esc(s.name)}</small><small>${esc(s.start.slice(5))} to ${esc(s.end.slice(5))}, ${n} cards</small>${current ? '<em>Running now</em>' : ''}</span></label>`;
+    });
+    opts.push(`<label><input type="radio" name="sprint" value="all" ${sprint === 'all' ? 'checked' : ''}><span><b>All sprints</b><small>Everything at once</small><small>${plan.cards.length} cards</small></span></label>`);
+    $('#sprints').innerHTML = opts.join('');
+    renderCards();
+  }
+  // The cards in the chosen sprint, by week, so you can check them before creating anything.
+  function renderCards() {
+    const groups = new Map();
+    for (const c of sprintCards()) {
+      const k = `Sprint ${c.sprint}${c.week ? `, week ${c.week}${c.weekStart ? ` (${c.weekStart.slice(5)} to ${String(c.due).slice(5)})` : ''}` : ''}`;
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(c);
+    }
+    $('#cardList').innerHTML = [...groups].map(([k, cs]) => `<div><h3>${esc(k)}</h3><ul>${cs.map((c) => `<li><b>${esc(c.owner.name)}</b><span>${esc(c.title)}</span>${c.deps?.length ? `<small>needs ${esc(c.deps.join(', '))}</small>` : ''}</li>`).join('')}</ul></div>`).join('');
+  }
+  $('#sprints').addEventListener('change', (e) => {
+    sprint = e.target.value === 'all' ? 'all' : Number(e.target.value);
+    renderCards(); renderTeam(); renderPlacement(); renderSummary(); preferExistingBoard();
+  });
+
+  // ---------- 1. Connect ----------
+  async function connect() {
+    $('#connect').disabled = true; msg($('#connectMsg'), 'warn', 'Connecting…');
+    try {
+      conn = await post('/api/connect', {});
+      msg($('#connectMsg'), 'ok', `Connected as ${conn.me.fullName || conn.me.username} (@${conn.me.username})`);
+      $('#step1').classList.add('is-done');
+      for (const s of ['#step2', '#step3', '#step4']) $(s).classList.remove('is-locked');
+      $('#workspace').innerHTML = (conn.workspaces.length ? '' : '<option value="">My boards</option>') + conn.workspaces.map((w) => `<option value="${esc(w.id)}">${esc(w.name)}</option>`).join('');
+      $('#boardId').innerHTML = conn.boards.length ? conn.boards.map((b) => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join('') : '<option value="">You have no open boards</option>';
+      renderPlacement(); preferExistingBoard();
+      checkAll();
+    } catch (e) {
+      conn = null;
+      msg($('#connectMsg'), 'bad', e.message);
+      for (const s of ['#step2', '#step3', '#step4']) $(s).classList.add('is-locked');
+    } finally { $('#connect').disabled = false; renderSummary(); }
+  }
+  $('#connect').addEventListener('click', connect);
+  connect();
+
+  // ---------- 2. Team ----------
+  function renderTeam() {
+    $('#team').innerHTML = team.map((t, i) => {
+      const n = sprintCards().filter((c) => c.owner.role === t.role).length;
+      return `<div class="person" style="--pc:${COLORS[i % 4]}">
+        <div class="person__role"><b><i class="dot"></i>${esc(t.role)}</b><small>${n} card${n === 1 ? '' : 's'} ${sprint === 'all' ? 'in total' : `in sprint ${sprint}`}</small></div>
+        <label class="field"><span>Name</span><input class="input" id="name${i}" data-i="${i}" data-k="name" value="${esc(t.name)}" maxlength="40"></label>
+        <label class="field"><span>Trello username</span><input class="input" id="user${i}" data-i="${i}" data-k="trello" value="${esc(t.trello)}" placeholder="username" maxlength="60" autocapitalize="off" spellcheck="false"></label>
+        <p class="status" id="status${i}" aria-live="polite"></p>
+      </div>`;
+    }).join('');
+    team.forEach((_, i) => paintStatus(i));
+  }
+  function paintStatus(i) {
+    const t = team[i], el = $(`#status${i}`); if (!el) return;
+    if (!t.trello.trim()) { el.className = 'status bad'; el.textContent = 'No username: matched by name to someone already on the board'; return; }
+    if (t.check === 'wait') { el.className = 'status wait'; el.textContent = 'Checking…'; return; }
+    if (!t.check) { el.className = 'status wait'; el.textContent = conn ? 'Not checked yet' : 'Connect to Trello to check this username'; return; }
+    if (t.check.found) { el.className = 'status ok'; el.textContent = `Found ${t.check.fullName || t.check.username} (@${t.check.username})`; }
+    else { el.className = 'status bad'; el.textContent = `No Trello account named @${t.trello.trim().replace(/^@/, '')}`; }
+  }
+  $('#team').addEventListener('input', (e) => {
+    const i = e.target.dataset.i; if (i == null) return;
+    team[+i][e.target.dataset.k] = e.target.value;
+    if (e.target.dataset.k === 'trello') { team[+i].check = null; paintStatus(+i); }
+    renderSummary(); if (plan) updateListNote();
+  });
+  $('#team').addEventListener('change', (e) => { if (e.target.dataset.k === 'trello' && conn) checkOne(+e.target.dataset.i); });
+  async function checkOne(i) {
+    const t = team[i];
+    if (!t.trello.trim() || !conn) { paintStatus(i); return; }
+    t.check = 'wait'; paintStatus(i);
+    try { t.check = await post('/api/member', { username: t.trello }); }
+    catch (e) { t.check = null; const el = $(`#status${i}`); el.className = 'status bad'; el.textContent = e.message; return; }
+    if (t.check.found) { t.trello = t.check.username; const inp = $(`#user${i}`); if (inp && document.activeElement !== inp) inp.value = t.check.username; }
+    paintStatus(i); renderSummary();
+  }
+  async function checkAll() { for (let i = 0; i < team.length; i++) await checkOne(i); }
+  $('#checkAll').addEventListener('click', checkAll);
+
+  // ---------- 3. Board ----------
+  document.querySelectorAll('input[name="boardMode"]').forEach((r) => r.addEventListener('change', () => {
+    const existing = document.querySelector('input[name="boardMode"]:checked').value === 'existing';
+    $('#newBoard').hidden = existing; $('#existingBoard').hidden = !existing;
+    if (existing) loadLists(); else { boardLists = []; renderPlacement(); }
+    renderSummary();
+  }));
+  let boardLists = [];
+  const boardMode = () => document.querySelector('input[name="boardMode"]:checked').value;
+  const personListNames = () => [...team.map((t) => `${t.name.trim() || 'Teammate'}: To do`), 'Done - Team'];
+  async function loadLists() {
+    const id = $('#boardId').value;
+    boardLists = [];
+    if (id && conn) {
+      $('#placement').innerHTML = '<option>Loading the board’s lists…</option>';
+      try { boardLists = (await post('/api/lists', { boardId: id })).lists; }
+      catch (e) { boardLists = []; }
+    }
+    renderPlacement();
+  }
+  function renderPlacement() {
+    if (!plan) return;
+    const keep = $('#placement').value;
+    const sp = sprint === 'all' ? 'a list for each sprint' : `the list “${plan.sprints.find((s) => s.n === sprint).list}”`;
+    let html = `<option value="person">Each person’s own To do list</option><option value="sprint">${esc(sp[0].toUpperCase() + sp.slice(1))}</option>`;
+    if (boardMode() === 'existing' && boardLists.length) {
+      html += `<optgroup label="One list already on this board">${boardLists.map((l) => `<option value="list:${esc(l.id)}">${esc(l.name)}</option>`).join('')}</optgroup>`;
+    }
+    $('#placement').innerHTML = html;
+    $('#placement').value = [...$('#placement').options].some((o) => o.value === keep) ? keep : 'person';
+    updateListNote();
+  }
+  function updateListNote() {
+    const note = $('#listNote');
+    const v = $('#placement').value;
+    const have = new Set(boardLists.map((l) => l.name.trim().toLowerCase()));
+    let text = '';
+    if (v === 'person') {
+      const names = personListNames();
+      const missing = boardMode() === 'existing' ? names.filter((n) => !have.has(n.toLowerCase())) : names;
+      if (boardMode() === 'existing' && boardLists.length && !missing.length) text = 'Each person’s To do list and the shared Done list are already on this board, so the cards go straight into them. No new lists are created.';
+      else if (boardMode() === 'existing' && boardLists.length) text = `Adds ${missing.length === names.length ? 'a To do list for each person and one shared Done list' : `the missing lists: ${missing.join(', ')}`}. Lists already there are reused.`;
+      else text = `Creates these lists: ${names.join(', ')}. Later sprints reuse them.`;
+    } else if (v === 'sprint') {
+      text = 'Creates the sprint’s list if the board doesn’t have it yet.';
+    } else {
+      text = 'Every card goes into this one list. No lists are created.';
+    }
+    if (boardMode() === 'existing') text += ' Cards already on the board are never changed.';
+    note.textContent = text; note.hidden = false;
+  }
+  $('#boardId').addEventListener('change', loadLists);
+  $('#placement').addEventListener('change', updateListNote);
+  // From sprint 2 on, default to the board made for sprint 1.
+  function preferExistingBoard() {
+    if (!conn || sprint === 1 || sprint === 'all') return;
+    const name = ($('#boardName').value || plan.board || 'DateDeck').trim().toLowerCase();
+    const match = conn.boards.find((b) => b.name.trim().toLowerCase() === name);
+    if (!match) return;
+    document.querySelector('input[name="boardMode"][value="existing"]').checked = true;
+    $('#newBoard').hidden = true; $('#existingBoard').hidden = false;
+    $('#boardId').value = match.id;
+    renderSummary();
+    loadLists();
+  }
+
+  // ---------- 4. Create ----------
+  function renderSummary() {
+    if (!plan) return;
+    $('#summary').innerHTML = team.map((t, i) => {
+      const n = sprintCards().filter((c) => c.owner.role === t.role).length;
+      const u = t.trello.trim().replace(/^@/, '');
+      const who = t.check && t.check.found ? `@${t.check.username}` : !u ? 'matched by name' : t.check && t.check.found === false ? `@${u} not found` : `@${u}, not checked`;
+      return `<div><b>${n}</b><span title="${esc(t.name)}">${esc(t.name || `Teammate ${i + 1}`)}</span><span>${esc(who)}</span></div>`;
+    }).join('');
+    const missing = team.filter((t) => t.check && t.check.found === false);
+    const u = $('#unassigned');
+    u.hidden = !missing.length;
+    u.textContent = missing.length ? `${missing.map((t) => t.name).join(', ')} ${missing.length === 1 ? 'has' : 'have'} no working Trello username. Their cards are matched by name to a board member instead, or left unassigned if there's no match.` : '';
+    const mode = document.querySelector('input[name="boardMode"]:checked').value;
+    const n = sprintCards().length;
+    const which = sprint === 'all' ? 'for all sprints' : `for sprint ${sprint}`;
+    $('#create').textContent = `Create ${n} cards ${which}${mode === 'existing' ? '' : ' on a new board'}`;
+  }
+
+  let running = false;
+  $('#create').addEventListener('click', async () => {
+    if (running || !plan) return;
+    if (!conn) return msg($('#connectMsg'), 'bad', 'Connect to Trello first.');
+    const mode = document.querySelector('input[name="boardMode"]:checked').value;
+    if (mode === 'existing' && !$('#boardId').value) return;
+    running = true; $('#create').disabled = true;
+    const log = $('#log'); log.innerHTML = ''; $('#run').hidden = false; $('#openBoard').hidden = true; $('#bar').style.width = '0%';
+    $('#runText').textContent = 'Starting…';
+    const add = (cls, text, small = '') => {
+      const li = document.createElement('li'); li.className = cls;
+      li.innerHTML = `<span>${esc(text)}</span>${small ? `<small>${esc(small)}</small>` : ''}`;
+      log.appendChild(li); log.scrollTop = log.scrollHeight;
+    };
+    try {
+      const res = await fetch('/api/create', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          team: team.map((t) => ({ role: t.role, name: t.name, trello: t.check && t.check.found === false ? '' : t.trello })),
+          board: { mode, id: $('#boardId').value, placement: $('#placement').value, name: $('#boardName').value.trim(), workspace: $('#workspace').value },
+          sprints: sprint === 'all' ? undefined : [sprint],
+          checklists: $('#checklists').checked, dueDates: $('#dueDates').checked,
+        }),
+      });
+      if (!res.ok || !res.body) throw new Error((await res.json().catch(() => ({}))).error || `Request failed (${res.status}).`);
+      const reader = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let nl;
+        while ((nl = buf.indexOf('\n')) >= 0) {
+          const line = buf.slice(0, nl); buf = buf.slice(nl + 1);
+          if (!line.trim()) continue;
+          const e = JSON.parse(line);
+          if (e.board?.url) { $('#openBoard').href = e.board.url; }
+          if (e.total) { $('#bar').style.width = `${(e.done / e.total) * 100}%`; $('#runText').textContent = `Card ${e.done} of ${e.total}`; }
+          if (e.type === 'card') add('card', e.text, e.assigned ? e.owner : `${e.owner}, not assigned`);
+          else if (e.type === 'skip') add('skip', e.text);
+          else if (e.type === 'warn') add('warn', e.text);
+          else if (e.type === 'error') add('error', e.text);
+          else if (e.type === 'fatal') { add('error', e.text); $('#runText').textContent = 'Stopped. Nothing else was created.'; }
+          else if (e.type === 'done') {
+            $('#bar').style.width = '100%';
+            $('#runText').textContent = `Done. ${e.created} card${e.created === 1 ? '' : 's'} created${e.skipped ? `, ${e.skipped} already there` : ''}${e.failed ? `, ${e.failed} failed` : ''}.`;
+            if (e.board?.url) { $('#openBoard').href = e.board.url; $('#openBoard').hidden = false; }
+            $('#step4').classList.toggle('is-done', !e.failed);
+          } else add('', e.text);
+        }
+      }
+    } catch (err) {
+      add('error', err.message); $('#runText').textContent = 'Stopped.';
+    } finally { running = false; $('#create').disabled = false; refreshUndo(); }
+  });
+
+  // ---------- Undo the last run ----------
+  let lastRun = null, armed = false;
+  async function refreshUndo() {
+    try { lastRun = (await (await fetch('/api/last-run')).json()).run; } catch { lastRun = null; }
+    armed = false; paintUndo();
+  }
+  function paintUndo() {
+    const box = $('#undo');
+    box.hidden = !lastRun;
+    if (!lastRun) return;
+    const n = lastRun.cards.length, when = new Date(lastRun.at).toLocaleString();
+    $('#undoText').textContent = `Last run (${when}) created ${n} card${n === 1 ? '' : 's'} on “${lastRun.board?.name || 'the board'}”.`;
+    $('#undoBtn').textContent = armed ? `Click again to delete ${n} card${n === 1 ? '' : 's'}` : `Delete the ${n} card${n === 1 ? '' : 's'} from that run`;
+  }
+  $('#undoBtn').addEventListener('click', async () => {
+    if (running || !lastRun) return;
+    if (!armed) { armed = true; paintUndo(); return; }
+    running = true; $('#undoBtn').disabled = true; $('#create').disabled = true;
+    const log = $('#log'); log.innerHTML = ''; $('#run').hidden = false; $('#openBoard').hidden = true; $('#bar').style.width = '0%';
+    $('#runText').textContent = 'Deleting…';
+    const add = (cls, text) => { const li = document.createElement('li'); li.className = cls; li.innerHTML = `<span>${esc(text)}</span>`; log.appendChild(li); log.scrollTop = log.scrollHeight; };
+    try {
+      const res = await fetch('/api/undo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      if (!res.ok || !res.body) throw new Error((await res.json().catch(() => ({}))).error || `Request failed (${res.status}).`);
+      const reader = res.body.getReader(); const dec = new TextDecoder(); let buf = '';
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let nl;
+        while ((nl = buf.indexOf('\n')) >= 0) {
+          const line = buf.slice(0, nl); buf = buf.slice(nl + 1);
+          if (!line.trim()) continue;
+          const e = JSON.parse(line);
+          if (e.total) { $('#bar').style.width = `${(e.done / e.total) * 100}%`; $('#runText').textContent = `Card ${e.done} of ${e.total}`; }
+          if (e.type === 'deleted') add('', `Deleted ${e.text}`);
+          else if (e.type === 'skip') add('skip', e.text);
+          else if (e.type === 'error' || e.type === 'fatal') add('error', e.text);
+          if (e.type === 'undone') {
+            $('#bar').style.width = '100%';
+            $('#runText').textContent = `Done. ${e.deleted} card${e.deleted === 1 ? '' : 's'} deleted${e.gone ? `, ${e.gone} already gone` : ''}${e.failed ? `, ${e.failed} failed (try again)` : ''}.`;
+            if (e.board?.url) { $('#openBoard').href = e.board.url; $('#openBoard').hidden = false; }
+          }
+        }
+      }
+    } catch (err) {
+      add('error', err.message); $('#runText').textContent = 'Stopped.';
+    } finally { running = false; $('#undoBtn').disabled = false; $('#create').disabled = false; refreshUndo(); }
+  });
+  refreshUndo();
+})();
+</script>
+</body>
+</html>

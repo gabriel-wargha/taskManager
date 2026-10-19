@@ -1,0 +1,769 @@
+{
+  "format": "datedeck-trello-plan",
+  "version": 1,
+  "board": "DateDeck",
+  "exportedAt": "2026-10-19T15:34:38.000Z",
+  "labels": [
+    {
+      "name": "Backend",
+      "color": "green"
+    },
+    {
+      "name": "Frontend",
+      "color": "blue"
+    },
+    {
+      "name": "Design",
+      "color": "purple"
+    },
+    {
+      "name": "QA",
+      "color": "orange"
+    }
+  ],
+  "members": [
+    {
+      "name": "Rychen",
+      "trello": "rychenjones",
+      "role": "PocketBase and data"
+    },
+    {
+      "name": "Riley",
+      "trello": "rileycluff",
+      "role": "Deck and swiping"
+    },
+    {
+      "name": "Gabriel",
+      "trello": "gabrielwargha",
+      "role": "Forms, filters and React setup"
+    },
+    {
+      "name": "Talmage",
+      "trello": "",
+      "role": "Design, lists and quality"
+    }
+  ],
+  "sprints": [
+    {
+      "n": 1,
+      "name": "First deck",
+      "goal": "PocketBase with 30 real Rexburg date ideas, a Vite and React app with its look and layout, a deck with Save and Hide, and a form that adds ideas to PocketBase.",
+      "list": "Sprint 1: First deck",
+      "start": "2026-10-05",
+      "end": "2026-10-16"
+    },
+    {
+      "n": 2,
+      "name": "Swipe, filter and ship",
+      "goal": "Swipe to save or hide, filter by location and price, see your saved and hidden ideas, open an idea’s details, work well on phones, and put DateDeck online. The core app is done.",
+      "list": "Sprint 2: Swipe, filter and ship",
+      "start": "2026-10-19",
+      "end": "2026-10-30"
+    },
+    {
+      "n": 3,
+      "name": "Accounts and AI",
+      "goal": "Add sign-in so saved and hidden ideas follow each person, let people edit their own ideas, and add AI that suggests dates and helps write new ideas. Planned now so you can adjust it after sprint 2.",
+      "list": "Sprint 3: Accounts and AI",
+      "start": "2026-11-02",
+      "end": "2026-11-13"
+    }
+  ],
+  "cards": [
+    {
+      "id": "DD-01",
+      "title": "DD-01 Set up PocketBase and the ideas collection",
+      "story": "As the team, we want a PocketBase database with an ideas collection, so that every part of DateDeck reads and saves the same data.",
+      "criteria": [
+        "PocketBase lives in a pocketbase folder and runs on its own, without the React app",
+        "Ideas collection: title, description, place name, address, location area, price per person, duration, category and photo",
+        "Anyone can list, view and add ideas (we lock this down in sprint 3)",
+        "The collection is saved as migrations in the repo, so everyone gets the same schema"
+      ],
+      "labels": [
+        "Backend"
+      ],
+      "sprint": 1,
+      "week": 1,
+      "weekStart": "2026-10-05",
+      "branch": "rychen/dd-01",
+      "due": "2026-10-09",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 3,
+      "deps": []
+    },
+    {
+      "id": "DD-03",
+      "title": "DD-03 Build the IdeaCard component",
+      "story": "As a user, I want each idea on a card that shows what it is, where, how much and how long, so that I can decide at a glance.",
+      "criteria": [
+        "IdeaCard React component that takes an idea as props",
+        "Shows photo (or a placeholder), title, place, location area, price per person (Free when 0) and duration",
+        "Works from 320px wide up",
+        "Shown with the ideas in src/data/sample-ideas.json; plain styles for now"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 1,
+      "week": 1,
+      "weekStart": "2026-10-05",
+      "branch": "riley/dd-03",
+      "due": "2026-10-09",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 2,
+      "deps": []
+    },
+    {
+      "id": "DD-05",
+      "title": "DD-05 Set up the Vite and React project on GitHub",
+      "story": "As the team, we want one repo everyone can run in minutes, so that we can all start building on day one.",
+      "criteria": [
+        "First thing on day 1: push the empty Vite and React app and src/data/sample-ideas.json (5 ideas with the ideas collection fields) to main, so everyone can branch from it",
+        "README: how to run the app and PocketBase locally",
+        "Branch and pull request rules; main is protected",
+        "Lint and format setup so everyone’s code looks the same"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 1,
+      "week": 1,
+      "weekStart": "2026-10-05",
+      "branch": "gabriel/dd-05",
+      "due": "2026-10-09",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 2,
+      "deps": []
+    },
+    {
+      "id": "DD-07",
+      "title": "DD-07 Design the look and the app layout",
+      "story": "As the team, we want shared colors, fonts and a layout, so that every screen looks like one app.",
+      "criteria": [
+        "Design tokens as CSS variables: colors, fonts, spacing, corners",
+        "App shell with header and Deck and Browse tabs",
+        "Mobile-first layout that also works on a laptop",
+        "A one-page style guide in the docs"
+      ],
+      "labels": [
+        "Design"
+      ],
+      "sprint": 1,
+      "week": 1,
+      "weekStart": "2026-10-05",
+      "branch": "talmage/dd-07",
+      "due": "2026-10-09",
+      "owner": {
+        "name": "Talmage",
+        "trello": "",
+        "role": "Design, lists and quality"
+      },
+      "points": 2,
+      "deps": []
+    },
+    {
+      "id": "DD-02",
+      "title": "DD-02 Connect React to PocketBase",
+      "story": "As a developer, I want one simple way to load and add ideas from React, so that every screen uses the same data code.",
+      "criteria": [
+        "A shared PocketBase client using the URL from .env",
+        "A useIdeas hook that lists ideas and adds a new one",
+        "Loading and error states the screens can show",
+        "A short example in the README"
+      ],
+      "labels": [
+        "Backend",
+        "Frontend"
+      ],
+      "sprint": 1,
+      "week": 2,
+      "weekStart": "2026-10-12",
+      "branch": "rychen/dd-02",
+      "due": "2026-10-16",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 2,
+      "deps": [
+        "DD-01"
+      ]
+    },
+    {
+      "id": "DD-04",
+      "title": "DD-04 Show the deck with Save and Hide buttons",
+      "story": "As a user, I want to see one idea at a time and save or hide it, so that choosing a date is quick.",
+      "criteria": [
+        "Deck component shows the top idea with two cards stacked behind it, using the sample ideas for now",
+        "Save and Hide buttons move to the next idea",
+        "Saved and hidden ideas are remembered in this browser, so they stay after a reload",
+        "Shows how many ideas are left, and an empty state when you reach the end",
+        "IdeaCard now uses the design tokens"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 1,
+      "week": 2,
+      "weekStart": "2026-10-12",
+      "branch": "riley/dd-04",
+      "due": "2026-10-16",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 3,
+      "deps": [
+        "DD-03",
+        "DD-07"
+      ]
+    },
+    {
+      "id": "DD-06",
+      "title": "DD-06 Add an idea with a form",
+      "story": "As a user, I want to add a Rexburg date idea, so that the deck grows with ideas from people who live here.",
+      "criteria": [
+        "React form: title, place, address, location area, price per person, duration, category and description",
+        "Clear messages for missing or invalid fields",
+        "Saves straight to PocketBase, and the new idea shows in the PocketBase dashboard",
+        "Clears the form and confirms it was added"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 1,
+      "week": 2,
+      "weekStart": "2026-10-12",
+      "branch": "gabriel/dd-06",
+      "due": "2026-10-16",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 3,
+      "deps": [
+        "DD-01",
+        "DD-05"
+      ]
+    },
+    {
+      "id": "DD-08",
+      "title": "DD-08 Collect 30 Rexburg date ideas and load them",
+      "story": "As a user, I want real Rexburg ideas from the first day, so that the deck is useful right away.",
+      "criteria": [
+        "30 ideas from real Rexburg-area places, with address and location area",
+        "Every price range covered: free, under $10, $10 to $25, and $25 and up",
+        "Every location area and category has at least 3 ideas",
+        "Loaded into PocketBase with an import file the team can rerun"
+      ],
+      "labels": [
+        "QA"
+      ],
+      "sprint": 1,
+      "week": 2,
+      "weekStart": "2026-10-12",
+      "branch": "talmage/dd-08",
+      "due": "2026-10-16",
+      "owner": {
+        "name": "Talmage",
+        "trello": "",
+        "role": "Design, lists and quality"
+      },
+      "points": 2,
+      "deps": [
+        "DD-01"
+      ]
+    },
+    {
+      "id": "DD-14",
+      "sprint": 2,
+      "title": "DD-14 Open an idea’s details",
+      "story": "As a user, I want to open an idea and see everything about it, so that I can plan the date.",
+      "criteria": [
+        "Tap an idea in the All ideas grid to open its details; close with a Close button or Esc",
+        "Details view: photo from PocketBase file storage (or a placeholder), full description, address, price, duration and category",
+        "Open in Maps link for the address",
+        "Works with both the sample ideas and real PocketBase ideas, so it doesn’t wait on DD-09",
+        "Built as its own IdeaDetails component, so the Liked list and sprint 3's Pick one for us can reuse it; fits a 375px screen"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "week": 3,
+      "weekStart": "2026-10-19",
+      "branch": "rychen/dd-14",
+      "due": "2026-10-23",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 2,
+      "deps": [
+        "DD-02",
+        "DD-03"
+      ]
+    },
+    {
+      "id": "DD-11",
+      "sprint": 2,
+      "title": "DD-11 Swipe the card by dragging",
+      "story": "As a user, I want to swipe right to save and left to hide, so that DateDeck feels like flicking through a deck.",
+      "criteria": [
+        "Drag past a set distance to save (right) or hide (left); short drags spring back",
+        "SAVE and HIDE stamps fade in while dragging",
+        "Works with mouse, touch and pen",
+        "Left and right arrow keys do the same",
+        "Built as its own SwipeCard component that wraps the top card and calls the deck's save and hide"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "week": 3,
+      "weekStart": "2026-10-19",
+      "branch": "riley/dd-11",
+      "due": "2026-10-23",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 3,
+      "deps": [
+        "DD-04"
+      ]
+    },
+    {
+      "id": "DD-09",
+      "sprint": 2,
+      "title": "DD-09 Load real ideas with PocketBase filters and share saved and hidden ideas",
+      "story": "As a user, I want the deck to show real Rexburg ideas that fit my location and budget, so that what I see works for me. This is the groundwork card: every week 4 card builds on it.",
+      "criteria": [
+        "First, by Tue Oct 20: give each tab its own page file (pages/Deck.jsx, pages/Browse.jsx, pages/Liked.jsx); Home.jsx keeps the header and switches tabs; nothing looks different and class names stay the same. Merge it so everyone builds in their own file",
+        "The deck and the All ideas grid load real ideas through useIdeas instead of the sample file, with loading, error and empty states",
+        "useIdeas accepts location areas, a price range, category and search text, filtered with pb.filter() queries in PocketBase, not in the browser",
+        "Results are sorted and paged so the deck stays fast",
+        "One shared useSwipes hook (provider in App.jsx) gives every tab saved, hidden, save, hide, unsave and unhide, still stored in datedeck.swipes",
+        "Filter state lives in Home.jsx and is passed to the deck and All ideas, ready for the filter bar in DD-13"
+      ],
+      "labels": [
+        "Backend",
+        "Frontend"
+      ],
+      "week": 3,
+      "weekStart": "2026-10-19",
+      "branch": "gabriel/dd-09",
+      "due": "2026-10-23",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 3,
+      "deps": [
+        "DD-02",
+        "DD-04"
+      ]
+    },
+    {
+      "id": "DD-16",
+      "sprint": 2,
+      "title": "DD-16 Make it great on phones",
+      "story": "As a user on my phone, I want DateDeck to fit my screen and thumbs, so that we can pick a date anywhere.",
+      "criteria": [
+        "Full-screen deck with the Save, Hide, Undo and Shuffle buttons in thumb reach",
+        "Header, tabs, the All ideas grid and the add idea form fit phone screens",
+        "Phone layout rules added to docs/STYLE_GUIDE.md (breakpoints, safe areas, grid and list patterns), so the week 4 screens follow them",
+        "No sideways scrolling at 375px; tested on an iPhone and an Android phone",
+        "Basic accessibility check: labels, focus and contrast"
+      ],
+      "labels": [
+        "Design",
+        "QA"
+      ],
+      "week": 3,
+      "weekStart": "2026-10-19",
+      "branch": "talmage/dd-16",
+      "due": "2026-10-23",
+      "owner": {
+        "name": "Talmage",
+        "trello": "",
+        "role": "Design, lists and quality"
+      },
+      "points": 3,
+      "deps": [
+        "DD-04",
+        "DD-07"
+      ]
+    },
+    {
+      "id": "DD-13",
+      "sprint": 2,
+      "title": "DD-13 Build the location and price filters",
+      "story": "As a user, I want to filter by where and how much, so that I only see dates that fit tonight.",
+      "criteria": [
+        "Location area chips and price ranges: Free, under $10, $10 to $25, $25 and up",
+        "Category chips and a search box",
+        "The deck and the All ideas grid update together, and Clear all resets them",
+        "Each option shows how many ideas match",
+        "Built as its own FilterBar component; fits a 375px screen with no sideways scrolling",
+        "Also add Save and Hide buttons to your IdeaDetails view from DD-14, using useSwipes from DD-09"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "week": 4,
+      "weekStart": "2026-10-26",
+      "branch": "rychen/dd-13",
+      "due": "2026-10-30",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 3,
+      "deps": [
+        "DD-09",
+        "DD-14"
+      ]
+    },
+    {
+      "id": "DD-12",
+      "sprint": 2,
+      "title": "DD-12 Undo the last swipe and shuffle the deck",
+      "story": "As a user, I want to take back a swipe or mix up the order, so that a mistake or a boring order is easy to fix.",
+      "criteria": [
+        "Back button undoes the last save or hide, whether it was a swipe or a button (add undo to useSwipes)",
+        "Shuffle reorders the ideas that are left",
+        "Hidden ideas never come back into the stack after a reload"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "week": 4,
+      "weekStart": "2026-10-26",
+      "branch": "riley/dd-12",
+      "due": "2026-10-30",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 2,
+      "deps": [
+        "DD-09",
+        "DD-11"
+      ]
+    },
+    {
+      "id": "DD-10",
+      "sprint": 2,
+      "title": "DD-10 Put DateDeck online",
+      "story": "As the team, we want DateDeck live on the internet, so that the class can use it on their phones.",
+      "criteria": [
+        "PocketBase hosted on AWS with a persistent disk and HTTPS, and the React app on Netlify pointing at it",
+        "Netlify rebuilds the live app on every merge to main, so everything merged goes live on its own with no final deploy step",
+        "Public rules: anyone can view and add ideas, nobody can edit or delete from the app",
+        "Admin password is strong and backups are on",
+        "README deploy steps: how to apply new migrations and how to load the DD-08 ideas into the live database, so they go live as soon as DD-08 is merged",
+        "Smoke test on the live link from a phone: load, save or hide, add"
+      ],
+      "labels": [
+        "Backend"
+      ],
+      "week": 4,
+      "weekStart": "2026-10-26",
+      "branch": "gabriel/dd-10",
+      "due": "2026-10-30",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 3,
+      "deps": [
+        "DD-01",
+        "DD-02"
+      ]
+    },
+    {
+      "id": "DD-15",
+      "sprint": 2,
+      "title": "DD-15 Show my Liked (Saved) and Hidden lists",
+      "story": "As a user, I want to see the ideas I saved and the ones I hid, so that I can plan from my favorites and undo a hide.",
+      "criteria": [
+        "A Liked tab beside Deck and All ideas shows the ideas you saved (photo, title, location and price), using the rounded card grid and design tokens",
+        "Heart buttons in Deck and All ideas toggle a like with an accessible pressed state; the Liked grid and the Saved for later sidebar update together",
+        "Unlike from the Liked grid or the sidebar removes the idea from both lists, without deleting the idea",
+        "Likes use useSwipes from DD-09 (the saved array in datedeck.swipes), keep hidden and other fields, and show a clear message if storage can't be read",
+        "Hidden list with Bring back, which returns the idea to the deck",
+        "Clear empty states that explain swiping and hearts, with an All ideas button",
+        "Works by keyboard with visible focus, and fits 320px and 375px screens using the phone rules from DD-16"
+      ],
+      "labels": [
+        "Frontend",
+        "Design"
+      ],
+      "week": 4,
+      "weekStart": "2026-10-26",
+      "branch": "talmage/dd-15",
+      "due": "2026-10-30",
+      "owner": {
+        "name": "Talmage",
+        "trello": "",
+        "role": "Design, lists and quality"
+      },
+      "points": 3,
+      "deps": [
+        "DD-09",
+        "DD-16"
+      ]
+    },
+    {
+      "id": "DD-17",
+      "title": "DD-17 Sign up and sign in",
+      "story": "As a user, I want my own DateDeck account, so that my choices follow me to any device.",
+      "criteria": [
+        "Sign up and sign in with email and password using the PocketBase users collection",
+        "An auth context in React; signed-in state shows in the header",
+        "Sign out, and stay signed in after a reload",
+        "Ideas record who added them; only signed-in users add ideas, and only the creator edits or removes theirs"
+      ],
+      "labels": [
+        "Backend",
+        "Frontend"
+      ],
+      "sprint": 3,
+      "week": 5,
+      "weekStart": "2026-11-02",
+      "branch": "rychen/dd-17",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 3,
+      "deps": [
+        "DD-10"
+      ]
+    },
+    {
+      "id": "DD-19",
+      "title": "DD-19 Ask the AI for a date idea",
+      "story": "As a user, I want to describe what I am in the mood for and get matching ideas, so that choosing is even faster.",
+      "criteria": [
+        "A box where you type something like “cheap outdoor date for Friday night”",
+        "A PocketBase hook sends it, with the matching DateDeck ideas, to an AI API; the API key stays on the server",
+        "Shows 3 ideas from DateDeck with a one-line reason each, and Save buttons",
+        "Handles slow or failed AI answers with a clear message"
+      ],
+      "labels": [
+        "Backend",
+        "Frontend"
+      ],
+      "sprint": 3,
+      "week": 5,
+      "weekStart": "2026-11-02",
+      "branch": "riley/dd-19",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 3,
+      "deps": [
+        "DD-09",
+        "DD-10"
+      ]
+    },
+    {
+      "id": "DD-20",
+      "title": "DD-20 Pick one for us",
+      "story": "As a couple that cannot decide, we want DateDeck to pick from our saved ideas, so that we stop debating and go.",
+      "criteria": [
+        "Button on the Saved list picks one at random",
+        "The pick deals in on a card; Pick another never repeats the last one",
+        "Let’s do this one shows the details with Open in Maps"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 3,
+      "week": 5,
+      "weekStart": "2026-11-02",
+      "branch": "gabriel/dd-20",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 2,
+      "deps": [
+        "DD-14",
+        "DD-15"
+      ]
+    },
+    {
+      "id": "DD-24",
+      "title": "DD-24 Accessibility and polish pass",
+      "story": "As a user who relies on a keyboard or screen reader, I want every part of DateDeck to work for me, so that everyone can use it.",
+      "criteria": [
+        "Everything works by keyboard with a visible focus ring",
+        "Images and icon buttons have labels; text contrast is at least 4.5:1",
+        "Animations turn off with reduced motion",
+        "Accessibility score of 90 or more on the main screens"
+      ],
+      "labels": [
+        "QA"
+      ],
+      "sprint": 3,
+      "week": 5,
+      "weekStart": "2026-11-02",
+      "branch": "talmage/dd-24",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Talmage",
+        "trello": "",
+        "role": "Design, lists and quality"
+      },
+      "points": 2,
+      "deps": [
+        "DD-16"
+      ]
+    },
+    {
+      "id": "DD-18",
+      "title": "DD-18 Keep saved and hidden ideas in your account",
+      "story": "As a signed-in user, I want my saved and hidden ideas stored in my account, so that they are the same on my phone and laptop.",
+      "criteria": [
+        "A swipes collection linking user, idea and saved or hidden",
+        "Rules: each person reads and changes only their own swipes",
+        "On first sign-in, choices saved in the browser move to the account",
+        "Rules checked with two test accounts"
+      ],
+      "labels": [
+        "Backend"
+      ],
+      "sprint": 3,
+      "week": 6,
+      "weekStart": "2026-11-09",
+      "branch": "rychen/dd-18",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 3,
+      "deps": [
+        "DD-17"
+      ]
+    },
+    {
+      "id": "DD-21",
+      "title": "DD-21 Let the AI help write a new idea",
+      "story": "As a user adding an idea, I want help filling in the details, so that new ideas are complete and easy to read.",
+      "criteria": [
+        "From a title and place, the AI suggests a description, category, price range and duration",
+        "Suggestions fill the form and stay editable; nothing saves until you press Add",
+        "Uses the same server-side AI hook as DD-19",
+        "Works normally when the AI is unavailable"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 3,
+      "week": 6,
+      "weekStart": "2026-11-09",
+      "branch": "riley/dd-21",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 3,
+      "deps": [
+        "DD-06",
+        "DD-19"
+      ]
+    },
+    {
+      "id": "DD-22",
+      "title": "DD-22 Edit and remove my own ideas",
+      "story": "As someone who added an idea, I want to fix or remove it, so that my ideas stay accurate.",
+      "criteria": [
+        "My ideas list for signed-in users",
+        "Edit reuses the add form, filled in",
+        "Remove asks first",
+        "Only the person who added an idea sees these buttons"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 3,
+      "week": 6,
+      "weekStart": "2026-11-09",
+      "branch": "gabriel/dd-22",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 2,
+      "deps": [
+        "DD-06",
+        "DD-17"
+      ]
+    },
+    {
+      "id": "DD-23",
+      "title": "DD-23 Approve new ideas before they go live",
+      "story": "As the team, we want to check new ideas before everyone sees them, so that the deck stays useful and appropriate.",
+      "criteria": [
+        "New ideas start as pending and only show to the person who added them",
+        "Admins approve or reject pending ideas in the PocketBase dashboard",
+        "The person sees whether their idea is pending, approved or rejected",
+        "Starter ideas are already approved"
+      ],
+      "labels": [
+        "Backend",
+        "QA"
+      ],
+      "sprint": 3,
+      "week": 6,
+      "weekStart": "2026-11-09",
+      "branch": "talmage/dd-23",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Talmage",
+        "trello": "",
+        "role": "Design, lists and quality"
+      },
+      "points": 2,
+      "deps": [
+        "DD-17"
+      ]
+    }
+  ]
+}
