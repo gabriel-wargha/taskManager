@@ -1,8 +1,18 @@
 # taskManager
 
+[![Tests](https://github.com/gabriel-wargha/taskManager/actions/workflows/test.yml/badge.svg)](https://github.com/gabriel-wargha/taskManager/actions/workflows/test.yml)
+
 Creates the DateDeck build plan in Trello, one sprint at a time. Each sprint is two weeks; every week each person has one story and one branch (for example `rychen/dd-01`), and no story depends on another story from the same week. DateDeck is built with Vite, React and PocketBase: sprints 1 and 2 build the core app, sprint 3 adds accounts and AI. Each teammate (Gabriel, Riley, Rychen and Talmage) gets a **To do** list and the team shares one **Done - Team** list. Each story goes into its owner's To do list, assigned to them, with an acceptance criteria checklist and a due date.
 
 Needs Node 18 or newer (https://nodejs.org). No `npm install` needed.
+
+## Try it without a Trello account
+
+```bash
+npm run demo
+```
+
+This runs the real app against a fake Trello on your computer (`fake-trello.js`). The DateDeck board already has sprint 1 on it, so you can create sprint 2, run it again to see that nothing is duplicated, and undo. Nothing is sent to Trello, and your `.env` and `last-run.json` aren't used. Links to cards and boards point to the fake, so they don't open.
 
 ## Use it
 
@@ -41,6 +51,19 @@ They live in `.env` in this folder (readable only by you), are sent from this co
 
 `sprint-plan.html` is an offline copy of the plan page. Opened from disk, its edits last until you reload.
 
+## Tests
+
+```bash
+npm test
+```
+
+Uses Node's built-in test runner, so there's still nothing to install. The tests run against the fake Trello, so they need no key or network:
+
+- `test/trello-core.test.js` covers building the board (lists per person, labels, assignment, checklists, due dates), safe re-runs, matching people by name, failures and retries, and undo.
+- `test/trello-app.test.js` starts the app itself and checks that it refuses requests from other websites, never sends the key or token to the page, and streams a full create and undo.
+
+GitHub Actions runs them on Node 18, 20 and 22 for every push and pull request.
+
 ## Files
 
 | File | What it is |
@@ -51,5 +74,8 @@ They live in `.env` in this folder (readable only by you), are sent from this co
 | `create-trello-board.js` | Command-line version: `TRELLO_KEY=... TRELLO_TOKEN=... node create-trello-board.js datedeck-trello.json --sprint 2 --board-id <id>` (add `--dry-run` to preview) |
 | `datedeck-trello.json` | The 24 stories across 3 sprints |
 | `sprint-plan.html` | Offline copy of the sprint plan page |
+| `fake-trello.js` | An in-memory fake of the Trello API, used by the tests and the demo |
+| `demo.js` | `npm run demo`: the app against the fake Trello |
+| `test/` | The tests (`npm test`) |
 
 Use `TRELLO_APP_PORT=4322 npm start` if port 4321 is busy.

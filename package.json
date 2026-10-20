@@ -4,6 +4,8 @@
   "description": "Creates the datedeck sprint plan in Trello, with each card assigned to its owner.",
   "scripts": {
     "start": "node trello-app.js",
+    "demo": "node demo.js",
+    "test": "node --test",
     "cli": "node create-trello-board.js",
     "preview": "node create-trello-board.js datedeck-trello.json --dry-run"
   },
