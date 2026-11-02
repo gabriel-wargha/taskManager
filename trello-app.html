@@ -258,7 +258,7 @@ details ol { margin: 8px 0 2px; padding-left: 20px; color: var(--muted); display
     if (!$('#boardName').value) $('#boardName').value = p.board || 'DateDeck';
     // Default to the sprint that's running today, else the first one.
     const today = new Date().toISOString().slice(0, 10);
-    const now = p.sprints.find((s) => s.start <= today && today <= s.end) || p.sprints.find((s) => today < s.start) || p.sprints[0];
+    const now = p.sprints.findLast((s) => s.start <= today && today <= s.end) || p.sprints.find((s) => today < s.start) || p.sprints[0];
     sprint = now.n;
     renderSprints(); renderTeam(); renderPlacement(); renderSummary();
   }

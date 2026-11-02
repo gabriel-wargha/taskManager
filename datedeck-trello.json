@@ -2,7 +2,7 @@
   "format": "datedeck-trello-plan",
   "version": 1,
   "board": "DateDeck",
-  "exportedAt": "2026-10-19T15:34:38.000Z",
+  "exportedAt": "2026-11-02T16:16:39.000Z",
   "labels": [
     {
       "name": "Backend",
@@ -39,7 +39,7 @@
     },
     {
       "name": "Talmage",
-      "trello": "",
+      "trello": "talmagetrebilcock",
       "role": "Design, lists and quality"
     }
   ],
@@ -65,6 +65,14 @@
       "name": "Accounts and AI",
       "goal": "Add sign-in so saved and hidden ideas follow each person, let people edit their own ideas, and add AI that suggests dates and helps write new ideas. Planned now so you can adjust it after sprint 2.",
       "list": "Sprint 3: Accounts and AI",
+      "start": "2026-11-02",
+      "end": "2026-11-13"
+    },
+    {
+      "n": 4,
+      "name": "Launch on AWS",
+      "goal": "Put the whole DateDeck, with accounts and AI, live on AWS, finish the side filters, lock down security, let people mark dates as done, give every idea a real photo, and fix what testers find. Sprint 5 is for polish.",
+      "list": "Sprint 4: Launch on AWS",
       "start": "2026-11-02",
       "end": "2026-11-13"
     }
@@ -168,7 +176,7 @@
       "due": "2026-10-09",
       "owner": {
         "name": "Talmage",
-        "trello": "",
+        "trello": "talmagetrebilcock",
         "role": "Design, lists and quality"
       },
       "points": 2,
@@ -282,7 +290,7 @@
       "due": "2026-10-16",
       "owner": {
         "name": "Talmage",
-        "trello": "",
+        "trello": "talmagetrebilcock",
         "role": "Design, lists and quality"
       },
       "points": 2,
@@ -403,7 +411,7 @@
       "due": "2026-10-23",
       "owner": {
         "name": "Talmage",
-        "trello": "",
+        "trello": "talmagetrebilcock",
         "role": "Design, lists and quality"
       },
       "points": 3,
@@ -526,7 +534,7 @@
       "due": "2026-10-30",
       "owner": {
         "name": "Talmage",
-        "trello": "",
+        "trello": "talmagetrebilcock",
         "role": "Design, lists and quality"
       },
       "points": 3,
@@ -642,7 +650,7 @@
       "due": "2026-11-06",
       "owner": {
         "name": "Talmage",
-        "trello": "",
+        "trello": "talmagetrebilcock",
         "role": "Design, lists and quality"
       },
       "points": 2,
@@ -757,12 +765,229 @@
       "due": "2026-11-13",
       "owner": {
         "name": "Talmage",
-        "trello": "",
+        "trello": "talmagetrebilcock",
         "role": "Design, lists and quality"
       },
       "points": 2,
       "deps": [
         "DD-17"
+      ]
+    },
+    {
+      "id": "DD-31",
+      "title": "DD-31 Deploy the final DateDeck to AWS",
+      "story": "As the team, we want the finished DateDeck with accounts and AI running on AWS, so that the class uses the real app on their phones. This is a two-week story: Rychen has only this card in sprint 4.",
+      "criteria": [
+        "Apply the sprint 3 migrations (users, swipes, pending and approved ideas) and the sprint 4 ones to the live PocketBase on AWS",
+        "The AI API key is a server secret on AWS, never in the repo or the browser build",
+        "The React app is hosted on AWS (Amplify, or S3 with CloudFront) with HTTPS, and rebuilds on every merge to main",
+        "Daily backups, one restore tested, and a strong admin password",
+        "Smoke test from a phone: sign up, swipe, ask the AI, add an idea and approve it",
+        "README deploy and rollback steps, so anyone on the team can redeploy"
+      ],
+      "labels": [
+        "Backend"
+      ],
+      "sprint": 4,
+      "week": 7,
+      "weekStart": "2026-11-02",
+      "branch": "rychen/dd-31",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Rychen",
+        "trello": "rychenjones",
+        "role": "PocketBase and data"
+      },
+      "points": 5,
+      "deps": [
+        "DD-10",
+        "DD-17",
+        "DD-18",
+        "DD-19",
+        "DD-23"
+      ]
+    },
+    {
+      "id": "DD-25",
+      "title": "DD-25 Finish the side filters",
+      "story": "As a user, I want to filter by where and how much from a side panel, so that I only see dates that fit tonight. Carried over from DD-13, which was not finished in sprint 2.",
+      "criteria": [
+        "A filter side panel beside the deck and All ideas on a laptop, opening as a sheet on phones",
+        "Location area chips and price ranges: Free, under $10, $10 to $25, $25 and up",
+        "Category chips and a search box",
+        "The deck and the All ideas grid update together, and Clear all resets them",
+        "Each option shows how many ideas match",
+        "Uses the useIdeas filters and the filter state in Home.jsx from DD-09; fits a 375px screen with no sideways scrolling",
+        "Move the old DD-13 card to Done - Team when this merges"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 4,
+      "week": 7,
+      "weekStart": "2026-11-02",
+      "branch": "gabriel/dd-25",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 3,
+      "deps": [
+        "DD-09",
+        "DD-14"
+      ]
+    },
+    {
+      "id": "DD-27",
+      "title": "DD-27 Mark a date as done",
+      "story": "As a couple, we want to mark a saved idea as a date we went on, so that we remember what we did and what is left to try.",
+      "criteria": [
+        "A We did this button on each idea in the Liked list",
+        "Done ideas move to a Done section under Liked, with the date you marked them",
+        "Undo a done mark from the Done section",
+        "Saved with the signed-in user’s swipes from DD-18, so it is the same on every device"
+      ],
+      "labels": [
+        "Frontend"
+      ],
+      "sprint": 4,
+      "week": 7,
+      "weekStart": "2026-11-02",
+      "branch": "riley/dd-27",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 2,
+      "deps": [
+        "DD-15",
+        "DD-18"
+      ]
+    },
+    {
+      "id": "DD-29",
+      "title": "DD-29 Bug bash and test with classmates",
+      "story": "As the team, we want real people to try DateDeck before launch, so that we fix the problems they find, not the ones we guess.",
+      "criteria": [
+        "5 classmates try the latest main on their phones (locally or on the Netlify preview until DD-31 is live): sign up, swipe, filter, ask the AI, add an idea",
+        "Every bug is a GitHub issue with steps, phone and browser, and a High, Medium or Low priority",
+        "The High issues are listed for Riley by Friday so DD-28 can start on Monday",
+        "A short notes file with what confused people, for the sprint 5 polish"
+      ],
+      "labels": [
+        "QA"
+      ],
+      "sprint": 4,
+      "week": 7,
+      "weekStart": "2026-11-02",
+      "branch": "talmage/dd-29",
+      "due": "2026-11-06",
+      "owner": {
+        "name": "Talmage",
+        "trello": "talmagetrebilcock",
+        "role": "Design, lists and quality"
+      },
+      "points": 2,
+      "deps": [
+        "DD-17",
+        "DD-19",
+        "DD-23"
+      ]
+    },
+    {
+      "id": "DD-26",
+      "title": "DD-26 Lock down security and data rules",
+      "story": "As the team, we want every rule and secret checked before launch, so that nobody can read or change what is not theirs.",
+      "criteria": [
+        "Review every PocketBase collection rule (ideas, users, swipes, approvals) and test each one signed out, as a user and as a second user",
+        "Limit how often each user can call the AI hook, so the API key cannot be abused",
+        "Check idea fields on the server, not just in the form",
+        "No secrets in the repo or in the built frontend",
+        "Rule changes go in as migrations, so Rychen applies them to the live server in DD-31",
+        "Findings and fixes written up in docs/SECURITY.md"
+      ],
+      "labels": [
+        "Backend",
+        "QA"
+      ],
+      "sprint": 4,
+      "week": 8,
+      "weekStart": "2026-11-09",
+      "branch": "gabriel/dd-26",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Gabriel",
+        "trello": "gabrielwargha",
+        "role": "Forms, filters and React setup"
+      },
+      "points": 3,
+      "deps": [
+        "DD-17",
+        "DD-18",
+        "DD-19",
+        "DD-23"
+      ]
+    },
+    {
+      "id": "DD-28",
+      "title": "DD-28 Fix the bug-bash bugs and add error screens",
+      "story": "As a user, I want DateDeck to keep working when something goes wrong, so that a bad connection or a wrong link does not leave me stuck.",
+      "criteria": [
+        "Fix the High issues from DD-29, one pull request per fix, each closing its issue",
+        "A friendly screen when PocketBase cannot be reached, with Try again",
+        "A Not found screen for unknown links, with a way back to the deck",
+        "Medium and Low issues stay open, labeled for sprint 5"
+      ],
+      "labels": [
+        "Frontend",
+        "QA"
+      ],
+      "sprint": 4,
+      "week": 8,
+      "weekStart": "2026-11-09",
+      "branch": "riley/dd-28",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Riley",
+        "trello": "rileycluff",
+        "role": "Deck and swiping"
+      },
+      "points": 2,
+      "deps": [
+        "DD-29"
+      ]
+    },
+    {
+      "id": "DD-30",
+      "title": "DD-30 Give every starter idea a real photo",
+      "story": "As a user, I want a real photo on every idea, so that I can picture the date before I pick it.",
+      "criteria": [
+        "A photo for each of the 30 starter ideas, taken by the team or free to use, with the source noted",
+        "Cropped to the card shape and compressed to under 200 KB each",
+        "Each photo has alt text describing the place",
+        "Added to the DD-08 import file, so the photos load into the live database with one rerun"
+      ],
+      "labels": [
+        "Design"
+      ],
+      "sprint": 4,
+      "week": 8,
+      "weekStart": "2026-11-09",
+      "branch": "talmage/dd-30",
+      "due": "2026-11-13",
+      "owner": {
+        "name": "Talmage",
+        "trello": "talmagetrebilcock",
+        "role": "Design, lists and quality"
+      },
+      "points": 2,
+      "deps": [
+        "DD-08",
+        "DD-14"
       ]
     }
   ]

@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/gabriel-wargha/taskManager/actions/workflows/test.yml/badge.svg)](https://github.com/gabriel-wargha/taskManager/actions/workflows/test.yml)
 
-Creates the DateDeck build plan in Trello, one sprint at a time. Each sprint is two weeks; every week each person has one story and one branch (for example `rychen/dd-01`), and no story depends on another story from the same week. DateDeck is built with Vite, React and PocketBase: sprints 1 and 2 build the core app, sprint 3 adds accounts and AI. Each teammate (Gabriel, Riley, Rychen and Talmage) gets a **To do** list and the team shares one **Done - Team** list. Each story goes into its owner's To do list, assigned to them, with an acceptance criteria checklist and a due date.
+Creates the DateDeck build plan in Trello, one sprint at a time. Each sprint is two weeks; every week each person has one story and one branch (for example `rychen/dd-01`), and no story depends on another story from the same week. DateDeck is built with Vite, React and PocketBase: sprints 1 and 2 build the core app, sprint 3 adds accounts and AI, and sprint 4 launches it on AWS. Each teammate (Gabriel, Riley, Rychen and Talmage) gets a **To do** list and the team shares one **Done - Team** list. Each story goes into its owner's To do list, assigned to them, with an acceptance criteria checklist and a due date.
 
 Needs Node 18 or newer (https://nodejs.org). No `npm install` needed.
 
@@ -28,7 +28,7 @@ This runs the real app against a fake Trello on your computer (`fake-trello.js`)
 3. **Your team.** Enter each person's name and Trello username (the part after trello.com/u/ in their profile link). The page checks each username.
 4. **Sprint and board.** Pick the sprint (the current one is selected for you).
    - **Sprint 1:** choose *Create a new board*. It makes the board (or use your existing board) and the lists (*Gabriel: To do* and so on for each person, plus *Done - Team*) and adds the 8 sprint 1 cards.
-   - **Sprint 2 and 3:** the app picks your existing DateDeck board and drops the new cards into the To do lists that are already there. No new lists are created.
+   - **Sprint 2 and later:** the app picks your existing DateDeck board and drops the new cards into the To do lists that are already there. No new lists are created.
    - You can also put every card into one list that's already on the board, or into a list for the sprint.
 5. **Create the cards.** Watch them appear, then open the board.
 6. **Undo, if needed.** The page offers to delete the cards the last run created. Only those cards are deleted, never ones from earlier runs. (Command line: `--undo`.)
@@ -72,7 +72,7 @@ GitHub Actions runs them on Node 18, 20 and 22 for every push and pull request.
 | `trello-app.html` | The page you use in the browser |
 | `trello-core.js` | Talks to the Trello API and builds the board |
 | `create-trello-board.js` | Command-line version: `TRELLO_KEY=... TRELLO_TOKEN=... node create-trello-board.js datedeck-trello.json --sprint 2 --board-id <id>` (add `--dry-run` to preview) |
-| `datedeck-trello.json` | The 24 stories across 3 sprints |
+| `datedeck-trello.json` | The 31 stories across 4 sprints |
 | `sprint-plan.html` | Offline copy of the sprint plan page |
 | `fake-trello.js` | An in-memory fake of the Trello API, used by the tests and the demo |
 | `demo.js` | `npm run demo`: the app against the fake Trello |

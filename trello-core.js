@@ -151,7 +151,7 @@ async function buildBoard(trello, plan, opts = {}, emit = () => {}) {
       defaultLists: 'false',
       defaultLabels: 'false',
       idOrganization: workspaceId || undefined,
-      desc: 'DateDeck build plan: Vite, React and PocketBase. 3 sprints, 4 people, 2 stories each per sprint.',
+      desc: 'DateDeck build plan: Vite, React and PocketBase. 4 sprints, 4 people, up to 2 stories each per sprint.',
     });
     emit({ type: 'step', text: `Created the board “${board.name}”`, board });
   }
